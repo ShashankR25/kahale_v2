@@ -9,8 +9,8 @@
  */
 window.KAHALE_CONFIG = {
   API_URL: 'https://script.google.com/macros/s/AKfycby4NeWoDUEJDllFD0IIu3t6xXoxm2LRGAlaOed5GkZq1WlSQFX-AaNsnn55gr5CD-iS/exec',
-  PAYPAL_ME_USERNAME: 'Abhay2309',
-  PAYPAL_DISPLAY_NAME: 'Abhay Sathyanarayana Rao',
+  PAYPAL_ME_USERNAME: 'DarshanKantharaju',
+  PAYPAL_DISPLAY_NAME: 'Darshan Kantharaju',
   HELP_NAME: 'Abhay',
   HELP_EMAIL: 'kahalekarnataka1973@gmail.com',
   EVENT_TITLE: 'KĀHALE · Kannada Rajyotsava 2026',
