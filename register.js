@@ -421,13 +421,33 @@
     $('checkNowButton').disabled = true;
     setStatus('Checking your payment…');
     ensureSession().then(function () {
-      return K.call('verifyPayment', formData, { retries: 2 });
+      return K.call('verifyPayment', function () {
+        var d = formData();
+        d.lookupExisting = S.alreadyPaid;
+        return d;
+      }, { retries: 2 });
     }).then(function (res) {
       checking = false;
       $('checkNowButton').disabled = false;
       checks++;
       if (res && res.registered) { finish(res.registered); return; }
       if (res && res.verified) { submit(false); return; }
+      if (res && res.alreadyRegistered) {
+        var ar = res.alreadyRegistered;
+        $('waitProblem').textContent = '';
+        stopped = true;
+        clearTimeout(checkTimer);
+        $('waitSpinner').className = 'spinner stopped';
+        $('pendingOffer').hidden = true;
+        setStatus(ar.paid
+          ? 'You are already registered with this payment. ' + (ar.resent
+            ? 'We have sent your QR ticket again to ' + ar.email + ' \u2014 please check your inbox (and Spam).'
+            : 'Your QR ticket was emailed to ' + ar.email + '. If you cannot find it, contact ' + C.HELP_EMAIL + '.') +
+            ' If you made a NEW payment for another registration, wait a minute and tap "Check now".'
+          : 'You are already registered and the organisers are checking your payment. Your QR ticket will be emailed to ' +
+            ar.email + ' once it is confirmed.', 'Already registered \u2014 see details');
+        return;
+      }
       if (res && res.wrongAmount) {
         $('waitProblem').textContent = 'We found a PayPal payment of €' + res.wrongAmount + ' from you, but your total is €' +
           res.total + '. Only the exact amount can be accepted. Please do not pay again — email ' + C.HELP_EMAIL +
