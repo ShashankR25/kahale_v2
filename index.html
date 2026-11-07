@@ -42,6 +42,19 @@ h2{color:#fff7e4;font-size:clamp(15px,4.4vw,19px);letter-spacing:2px;margin:2px 
 .inapp.show{display:block}
 .inapp strong{display:block;font-size:14.5px;margin-bottom:4px;color:var(--red)}
 .inapp a.safari{display:inline-block;margin-top:8px;padding:8px 14px;border-radius:8px;background:var(--red);color:#fff;text-decoration:none;font-weight:bold}
+.sheet{display:none;position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.72);padding:16px;align-items:flex-start;justify-content:center}
+.sheet.show{display:flex}
+.sheet .pointer{position:fixed;top:6px;right:14px;color:#fff;font-size:34px;line-height:1;animation:bob 1s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-6px)}}
+.sheet .box{margin-top:56px;max-width:420px;width:100%;background:var(--cream);border:2px solid var(--gold);border-radius:14px;padding:20px 18px;text-align:center;color:#27231e}
+.sheet h4{margin:0 0 10px;color:var(--red);font-size:18px}
+.sheet ol{text-align:left;margin:0 0 14px;padding-left:22px;font-size:15px}
+.sheet ol li{margin:6px 0}
+.sheet .btn{display:block;width:100%;margin:8px 0 0;padding:13px;border:0;border-radius:10px;font-size:16px;font-weight:bold;cursor:pointer;text-decoration:none;font-family:inherit}
+.sheet .b1{background:var(--red);color:#fff}
+.sheet .b2{background:#fff;color:var(--red);border:2px solid var(--red)}
+.sheet .b3{background:transparent;color:#6b5f50;font-weight:normal;font-size:14px}
+.sheet .ok{color:#1d7a3a;font-size:14px;min-height:20px;margin-top:6px}
 </style>
 </head>
 <body>
@@ -64,8 +77,8 @@ h2{color:#fff7e4;font-size:clamp(15px,4.4vw,19px);letter-spacing:2px;margin:2px 
  <!-- iOS in-app browser notice (Instagram / Facebook / etc.). Hidden everywhere else. -->
  <div class="inapp" id="inapp">
  <strong>Using Instagram on iPhone?</strong>
- Registration and PayPal payment work best in Safari. Tap <b>•••</b> (top right) → <b>Open in external browser</b>, or use the button below.
- <br><a class="safari" id="openSafari" href="x-safari-https://script.google.com/macros/s/AKfycbwK0nXzOyodNVZhx4LvJLStHNdJyMtpJ0dClUcq1ZS8Kq6ad8zhLSk9E2BJULVrJEOH/exec">Open registration in Safari</a>
+ Registration &amp; PayPal only open in Safari. Tap <b>•••</b> (top right) → <b>Open in external browser</b>.
+ <br><a class="safari" id="openSafari" href="x-safari-https://script.google.com/macros/s/AKfycbwK0nXzOyodNVZhx4LvJLStHNdJyMtpJ0dClUcq1ZS8Kq6ad8zhLSk9E2BJULVrJEOH/exec">How to register on iPhone</a>
  </div>
 
  <a class="link register" href="https://script.google.com/macros/s/AKfycbwK0nXzOyodNVZhx4LvJLStHNdJyMtpJ0dClUcq1ZS8Kq6ad8zhLSk9E2BJULVrJEOH/exec" target="_top">
@@ -92,38 +105,57 @@ h2{color:#fff7e4;font-size:clamp(15px,4.4vw,19px);letter-spacing:2px;margin:2px 
  <p>ಸಿರಿಗನ್ನಡಂ ಗೆಲ್ಗೆ</p>
  </footer>
  </div>
+
+ <!-- iPhone + Instagram: instructions to open registration in Safari -->
+ <div class="sheet" id="sheet" role="dialog" aria-modal="true">
+ <div class="pointer">↗</div>
+ <div class="box">
+ <h4>Open in Safari to register</h4>
+ <p style="margin:0 0 10px;font-size:14px">Instagram on iPhone can't open the registration &amp; PayPal page. It takes 5 seconds:</p>
+ <ol>
+ <li>Tap <b>•••</b> at the <b>top right</b> of the screen</li>
+ <li>Tap <b>Open in external browser</b></li>
+ <li>Tap <b>Register for the Event</b> again in Safari</li>
+ </ol>
+ <a class="btn b1" id="tSafari" href="x-safari-https://script.google.com/macros/s/AKfycbwK0nXzOyodNVZhx4LvJLStHNdJyMtpJ0dClUcq1ZS8Kq6ad8zhLSk9E2BJULVrJEOH/exec">Try opening in Safari</a>
+ <button class="btn b2" id="tCopy" type="button">Copy registration link</button>
+ <div class="ok" id="tMsg"></div>
+ <button class="btn b3" id="tClose" type="button">Close</button>
+ </div>
+ </div>
 <script>
 (function () {
+  var REG = 'https://script.google.com/macros/s/AKfycbwK0nXzOyodNVZhx4LvJLStHNdJyMtpJ0dClUcq1ZS8Kq6ad8zhLSk9E2BJULVrJEOH/exec';
   var ua = navigator.userAgent || '';
   var isIOS = /iPhone|iPad|iPod/i.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
   var inApp = /Instagram|FBAN|FBAV|FB_IAB|Line\/|Snapchat|TikTok|musical_ly|Twitter/i.test(ua);
-  if (!(isIOS && inApp)) return;           // Android & normal browsers: nothing changes
+  if (!(isIOS && inApp)) return;   // Android & normal browsers: Register works as before
 
+  var sheet = document.getElementById('sheet');
+  var msg = document.getElementById('tMsg');
   document.getElementById('inapp').className += ' show';
+  function openSheet(ev) { if (ev) ev.preventDefault(); msg.textContent = ''; sheet.className = 'sheet show'; }
 
-  // Navigate the real top window (Apps Script runs this page inside an iframe).
-  function go(url) {
-    try { window.top.location.href = url; } catch (e) { window.location.href = url; }
-  }
+  // Register button and the banner button show the instructions instead of the broken page
+  document.querySelector('a.link.register').addEventListener('click', openSheet);
+  document.getElementById('openSafari').addEventListener('click', openSheet);
+  document.getElementById('tClose').addEventListener('click', function () { sheet.className = 'sheet'; });
+  sheet.addEventListener('click', function (e) { if (e.target === sheet) sheet.className = 'sheet'; });
 
-  // On iOS 17+ "x-safari-https://..." hands the link to Safari. If nothing
-  // happens (older iOS), fall back to opening the normal link in place.
-  function openInSafari(url) {
-    go('x-safari-' + url);
-    setTimeout(function () { if (!document.hidden) go(url); }, 1500);
-  }
-
-  var reg = document.querySelector('a.link.register');
-  var btn = document.getElementById('openSafari');
-  [reg, btn].forEach(function (a) {
-    if (!a) return;
-    a.addEventListener('click', function (ev) {
-      ev.preventDefault();
-      openInSafari(reg.getAttribute('href'));
-    });
+  // Copy link (works even when Instagram blocks Safari hand-off)
+  document.getElementById('tCopy').addEventListener('click', function () {
+    function done() { msg.textContent = '✓ Link copied – open Safari and paste it in the address bar'; }
+    function fallback() {
+      var t = document.createElement('textarea'); t.value = REG; t.setAttribute('readonly', '');
+      t.style.position = 'fixed'; t.style.opacity = '0'; document.body.appendChild(t);
+      t.select(); t.setSelectionRange(0, 99999);
+      try { document.execCommand('copy'); done(); } catch (e) { msg.textContent = REG; }
+      document.body.removeChild(t);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(REG).then(done, fallback);
+    else fallback();
   });
 })();
 </script>
 </body>
 </html>
-
