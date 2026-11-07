@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KAHALE | Ticket Scanner</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="img/logo.jpg">
+<style>
+:root{--gold:#d6ad54;--gold-light:#f8e5ad;--red:#861d20;--text:#27231e;--muted:#706960;--border:#e8e0d3;--cream:#fffdf8}
+*{box-sizing:border-box}
+body{margin:0;padding:18px 10px;background:radial-gradient(ellipse at top,#49301a 0,transparent 60%),#11100e;color:var(--text);font-family:Arial,Helvetica,sans-serif;line-height:1.5}
+.page{max-width:620px;margin:0 auto}
+.hero{padding:22px 16px;text-align:center;color:var(--gold-light);background:#000;border:1px solid #8e692e;border-bottom:4px solid var(--gold);border-radius:14px 14px 0 0}
+.hero .ornament{color:var(--gold);letter-spacing:8px;font-size:15px}
+.hero h1{margin:6px 0 2px;font-size:24px}
+.hero p{margin:0;color:#f5dca4;font-size:13px;letter-spacing:2px}
+.card{background:var(--cream);padding:22px 18px;border:1px solid var(--border);border-top:0;border-radius:0 0 14px 14px}
+h2{color:var(--red);font-size:19px;margin:0 0 14px;border-bottom:2px solid var(--gold);padding-bottom:8px}
+label{display:block;font-weight:bold;font-size:14px;margin:0 0 6px}
+input,select{width:100%;min-height:44px;padding:10px 12px;border:1px solid #d6cfc3;border-radius:6px;font-size:15px;background:#fff;color:var(--text)}
+input:focus,select:focus{outline:2px solid #d6ad5480;border-color:#b68b37}
+.field{margin-bottom:14px}
+button{border:0;border-radius:7px;padding:12px 16px;min-height:46px;font-size:15px;font-weight:bold;cursor:pointer}
+button:disabled{opacity:.6;cursor:wait}
+.primary{background:var(--red);color:#fff;width:100%}
+.gold{background:var(--gold);color:#14120f}
+.ghost{background:#efe7d8;color:var(--text)}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+.row>*{flex:1 1 auto}
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;font-size:14px;color:var(--muted)}
+.topbar button{min-height:36px;padding:6px 12px;font-size:13px}
+.or{text-align:center;color:var(--muted);font-size:12px;margin:12px 0;letter-spacing:2px}
+.message{margin-top:12px;padding:11px 13px;border-radius:6px;font-size:14px}
+.message:empty{display:none}
+.error{background:#ffebee;color:#b71c1c}
+.success{background:#e8f5e9;color:#1b5e20}
+.hidden{display:none!important}
+.status{border-radius:10px;padding:14px;text-align:center;color:#fff;margin:16px 0 12px}
+.status strong{display:block;font-size:20px;letter-spacing:1px}
+.status span{font-size:14px}
+.status.valid{background:#1b7a34}.status.used{background:#b71c1c}.status.notpaid{background:#c46a00}.status.notfound{background:#5d4037}
+.counts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.counts div{background:#fff3d4;border:1px solid #e4ce9a;border-radius:8px;text-align:center;padding:8px 4px}
+.counts b{display:block;font-size:22px;color:var(--red)}
+.counts small{font-size:12px;color:var(--muted)}
+table{width:100%;border-collapse:collapse;font-size:14px;margin-bottom:14px}
+td{padding:7px 4px;border-bottom:1px solid var(--border);vertical-align:top;overflow-wrap:anywhere}
+td:first-child{color:var(--muted);width:38%;white-space:nowrap}
+.log{white-space:pre-line}
+.admit{background:#fff6df;border-left:4px solid var(--gold);border-radius:6px;padding:12px;margin-bottom:12px}
+.admit button{width:100%;margin-top:10px;background:#1b7a34;color:#fff}
+.teams{display:grid;gap:10px}
+.team{display:flex;align-items:center;gap:14px;width:100%;text-align:left;background:#fff;border:2px solid var(--border);color:var(--text);padding:14px 16px}
+.team:hover,.team:focus{border-color:var(--gold);background:#fff9ea}
+.team .icon{font-size:30px;line-height:1}
+.team b{display:block;font-size:17px;color:var(--red)}
+.team small{display:block;font-weight:normal;color:var(--muted);font-size:13px}
+.team-badge{display:inline-block;background:var(--red);color:#fff;border-radius:999px;padding:2px 10px;font-size:12px;letter-spacing:1px;vertical-align:middle;margin-left:6px}
+.topbar .actions{display:flex;gap:6px}
+.status.noteligible{background:#5d4037}
+</style>
+</head>
+<body>
+<div class="page">
+  <header class="hero">
+    <div class="ornament">✦ ✦ ✦</div>
+    <h1>KĀHALE Ticket Scanner</h1>
+    <p>ORGANISING COMMITTEE · KANNADA RAJYOTSAVA 2026</p>
+  </header>
+
+  <main class="card">
+    <!-- Login -->
+    <section id="loginView">
+      <h2>Committee login</h2>
+      <form id="loginForm">
+        <div class="field">
+          <label for="username">Username</label>
+          <input id="username" autocomplete="username" required>
+        </div>
+        <div class="field">
+          <label for="password">Password</label>
+          <input id="password" type="password" autocomplete="current-password" required>
+        </div>
+        <button class="primary" id="loginButton" type="submit">Log in</button>
+      </form>
+      <div id="loginMessage" class="message error"></div>
+    </section>
+
+    <!-- Team choice -->
+    <section id="teamView" class="hidden">
+      <div class="topbar">
+        <span>Logged in as <strong class="userName"></strong></span>
+        <button class="ghost logoutButton" type="button">Log out</button>
+      </div>
+      <h2>Choose your team</h2>
+      <div class="teams">
+        <button class="team" type="button" data-team="security">
+          <span class="icon">🛡</span>
+          <span><b>Security team</b><small>Entry for all packages · allow attendees in</small></span>
+        </button>
+        <button class="team" type="button" data-team="food">
+          <span class="icon">🍛</span>
+          <span><b>Food team</b><small>Entry Pass with Dinner · Deal of the Day</small></span>
+        </button>
+        <button class="team" type="button" data-team="snacks">
+          <span class="icon">🥨</span>
+          <span><b>Snacks team</b><small>Entry Pass with Snacks · Deal of the Day</small></span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Scanner -->
+    <section id="scanView" class="hidden">
+      <div class="topbar">
+        <span>Logged in as <strong class="userName"></strong></span>
+        <span class="actions">
+          <button class="ghost" id="changeTeamButton" type="button">Change team</button>
+          <button class="ghost logoutButton" type="button">Log out</button>
+        </span>
+      </div>
+
+      <h2>Scan ticket <span class="team-badge" id="teamBadge"></span></h2>
+      <div class="row">
+        <button class="gold" id="photoButton" type="button">📷 Scan QR code</button>
+      </div>
+      <input id="photoInput" type="file" accept="image/*" capture="environment" class="hidden">
+      <div id="fileReader" class="hidden"></div>
+
+      <div class="or">— OR ENTER TICKET ID —</div>
+      <form id="manualForm" class="row">
+        <input id="manualId" placeholder="Ticket ID, PayPal ID or email" autocomplete="off" style="flex:3 1 200px">
+        <button class="ghost" type="submit" style="flex:1 1 90px">Look up</button>
+      </form>
+      <div id="scanMessage" class="message"></div>
+
+      <div id="result"></div>
+    </section>
+  </main>
+</div>
+
+<script src="config.js"></script>
+<script>
+  /* ----------------------------------------------------------------
+   * SETTINGS — this copy runs on the website (scanner.html) and talks to the
+   * Apps Script web app set as API_URL in config.js.
+   * "Scan QR code" opens the phone's own camera app, so no camera permission is needed.
+   * ---------------------------------------------------------------- */
+  // Website version: the Apps Script address comes from config.js.
+  const SCANNER_API_URL = (window.KAHALE_CONFIG && window.KAHALE_CONFIG.API_URL) || '';
+
+  const IN_APPS_SCRIPT = typeof google !== 'undefined' && google.script && google.script.run;
+
+  let token = null;
+  let team = null;
+  let currentTicket = null;
+  let busy = false;
+
+  const $ = function(id) { return document.getElementById(id); };
+
+  const TEAMS = {
+    security: {
+      label: 'Security', one: 'attendee', many: 'attendees', action: 'Allow', done: 'Entered', total: 'Tickets',
+      question: 'Number of attendees entering now',
+      valid: function(t) { return t.remaining + ' of ' + t.totalAllowed + ' attendee(s) can still enter'; },
+      usedTitle: '✖ QR CODE NO LONGER VALID',
+      used: function(t) { return 'All ' + t.totalAllowed + ' attendee(s) have already entered'; },
+      finished: ' This QR code is now used up for entry.'
+    },
+    food: {
+      label: 'Food', one: 'meal', many: 'meals', action: 'Serve', done: 'Served', total: 'Meals',
+      question: 'Number of meals to serve now',
+      valid: function(t) { return t.remaining + ' of ' + t.totalAllowed + ' meal(s) still to be served'; },
+      usedTitle: '✖ ALREADY SERVED',
+      used: function(t) { return 'All ' + t.totalAllowed + ' meal(s) on this ticket have been served'; },
+      notEligibleTitle: '✖ NO FOOD ON THIS TICKET',
+      notEligible: 'Only "Entry Pass with Dinner" and "Deal of the Day" include food',
+      finished: ' All meals on this ticket are now served.'
+    },
+    snacks: {
+      label: 'Snacks', one: 'snack', many: 'snacks', action: 'Serve', done: 'Served', total: 'Snacks',
+      question: 'Number of snacks to serve now',
+      valid: function(t) { return t.remaining + ' of ' + t.totalAllowed + ' snack(s) still to be served'; },
+      usedTitle: '✖ ALREADY SERVED',
+      used: function(t) { return 'All ' + t.totalAllowed + ' snack(s) on this ticket have been served'; },
+      notEligibleTitle: '✖ NO SNACKS ON THIS TICKET',
+      notEligible: 'Only "Entry Pass with Snacks" and "Deal of the Day" include snacks',
+      finished: ' All snacks on this ticket are now served.'
+    }
+  };
+
+  try { token = sessionStorage.getItem('kahaleScannerToken'); } catch (e) {}
+  try { setUserName(sessionStorage.getItem('kahaleScannerUser') || ''); } catch (e) {}
+  try { team = TEAMS[sessionStorage.getItem('kahaleScannerTeam')] ? sessionStorage.getItem('kahaleScannerTeam') : null; } catch (e) {}
+  if (team) $('teamBadge').textContent = TEAMS[team].label + ' team';
+  showView(!token ? 'login' : (team ? 'scan' : 'team'));
+
+  function setUserName(name) {
+    Array.prototype.forEach.call(document.querySelectorAll('.userName'), function(node) { node.textContent = name; });
+  }
+
+  // Sends one request: through google.script.run inside Apps Script, otherwise
+  // to the Apps Script web app (SCANNER_API_URL) over HTTPS.
+  function invoke(fn, args, onSuccess, onFailure) {
+    if (IN_APPS_SCRIPT) {
+      google.script.run.withSuccessHandler(onSuccess).withFailureHandler(onFailure)[fn].apply(null, args);
+      return;
+    }
+    if (!SCANNER_API_URL) {
+      onFailure(new Error('SCANNER_API_URL is not set at the top of the scanner page.'));
+      return;
+    }
+    // Plain-text body = no CORS preflight; Apps Script answers with JSON.
+    fetch(SCANNER_API_URL, { method: 'POST', body: JSON.stringify({ fn: fn, args: args }) })
+      .then(function(response) { return response.json(); })
+      .then(function(data) {
+        if (data && data.ok) onSuccess(data.result);
+        else onFailure(new Error(data && data.error ? data.error : 'server error'));
+      })
+      .catch(function(error) { onFailure(new Error('network: ' + (error && error.message))); });
+  }
+
+  // Calls the server; when Google is busy or the connection drops it retries
+  // automatically (up to 5 times, waiting longer each time).
+  function call(fn) {
+    const args = Array.prototype.slice.call(arguments, 1);
+    return new Promise(function(resolve, reject) {
+      let attempt = 0;
+      function run() {
+        invoke(fn, args, resolve, function(error) {
+            const text = error && error.message ? error.message : String(error || '');
+            if (text.indexOf('SESSION_EXPIRED') !== -1) {
+              clearSession();
+              showView('login');
+              setMessage('loginMessage', 'Your session has expired. Please log in again.', 'error');
+              reject(new Error(text));
+              return;
+            }
+            const temporary = !text ||
+              /BUSY|simultaneous|too many lock|lock timeout|timed? ?out|network|server error|unavailable|internal error|failed to fetch|connection/i.test(text);
+            if (temporary && attempt < 5) {
+              setTimeout(run, 1000 * Math.pow(2, attempt++) + Math.random() * 1000);
+              return;
+            }
+            reject(new Error(temporary
+              ? 'No connection to the server. Check the internet connection and try again.'
+              : text));
+        });
+      }
+      run();
+    });
+  }
+
+  function showView(name) {
+    $('loginView').classList.toggle('hidden', name !== 'login');
+    $('teamView').classList.toggle('hidden', name !== 'team');
+    $('scanView').classList.toggle('hidden', name !== 'scan');
+  }
+
+  function setMessage(id, text, type) {
+    const el = $(id);
+    el.textContent = text || '';
+    el.className = 'message' + (type ? ' ' + type : '');
+  }
+
+  function clearSession() {
+    token = null;
+    team = null;
+    try {
+      sessionStorage.removeItem('kahaleScannerToken');
+      sessionStorage.removeItem('kahaleScannerUser');
+      sessionStorage.removeItem('kahaleScannerTeam');
+    } catch (e) {}
+    $('result').innerHTML = '';
+  }
+
+  /* ---------- Login ---------- */
+  $('loginForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    const button = $('loginButton');
+    button.disabled = true;
+    button.textContent = 'Logging in...';
+    setMessage('loginMessage', '');
+
+    call('scannerLogin', $('username').value, $('password').value)
+      .then(function(session) {
+        token = session.token;
+        try {
+          sessionStorage.setItem('kahaleScannerToken', session.token);
+          sessionStorage.setItem('kahaleScannerUser', session.username);
+        } catch (e) {}
+        setUserName(session.username);
+        $('password').value = '';
+        showView('team');
+      })
+      .catch(function(error) {
+        if (error.message.indexOf('SESSION_EXPIRED') === -1) setMessage('loginMessage', error.message, 'error');
+      })
+      .then(function() {
+        button.disabled = false;
+        button.textContent = 'Log in';
+      });
+  });
+
+  Array.prototype.forEach.call(document.querySelectorAll('.logoutButton'), function(button) {
+    button.addEventListener('click', function() {
+      const old = token;
+      clearSession();
+      showView('login');
+      if (old) call('scannerLogout', old).catch(function() {});
+    });
+  });
+
+  /* ---------- Team ---------- */
+  Array.prototype.forEach.call(document.querySelectorAll('.team'), function(button) {
+    button.addEventListener('click', function() {
+      team = button.getAttribute('data-team');
+      try { sessionStorage.setItem('kahaleScannerTeam', team); } catch (e) {}
+      $('teamBadge').textContent = TEAMS[team].label + ' team';
+      $('result').innerHTML = '';
+      $('manualId').value = '';
+      setMessage('scanMessage', '');
+      showView('scan');
+    });
+  });
+
+  $('changeTeamButton').addEventListener('click', function() {
+    $('result').innerHTML = '';
+    setMessage('scanMessage', '');
+    showView('team');
+  });
+
+  /* ---------- Photo scan / manual ---------- */
+  // The QR library loads in the background so the page itself opens instantly.
+  const QR_LIBRARY_URLS = [
+    'https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js',
+    'https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js'
+  ];
+  let qrLibraryPromise = null;
+  function loadQrLibrary() {
+    if (typeof Html5Qrcode !== 'undefined') return Promise.resolve();
+    if (qrLibraryPromise) return qrLibraryPromise;
+    qrLibraryPromise = QR_LIBRARY_URLS.reduce(function(previous, url) {
+      return previous.catch(function() {
+        return new Promise(function(resolve, reject) {
+          const script = document.createElement('script');
+          script.src = url;
+          script.async = true;
+          script.onload = function() { typeof Html5Qrcode !== 'undefined' ? resolve() : reject(new Error('load')); };
+          script.onerror = function() { script.remove(); reject(new Error('load')); };
+          document.head.appendChild(script);
+        });
+      });
+    }, Promise.reject(new Error('start'))).catch(function(error) {
+      qrLibraryPromise = null;
+      throw error;
+    });
+    return qrLibraryPromise;
+  }
+  setTimeout(function() { loadQrLibrary().catch(function() {}); }, 0);
+
+  $('photoButton').addEventListener('click', function() { $('photoInput').click(); });
+
+  $('photoInput').addEventListener('change', function() {
+    const file = this.files && this.files[0];
+    this.value = '';
+    if (!file) return;
+    setMessage('scanMessage', 'Reading QR code...', '');
+    scanPhoto(file)
+      .then(onCode)
+      .catch(function(error) {
+        setMessage('scanMessage', error && error.message === 'NO_LIBRARY'
+          ? 'The scanner library could not load. Please type the ticket ID.'
+          : 'No QR code found in that photo. Try again closer and in good light.', 'error');
+      });
+  });
+
+  // Phone photos are huge (12 MP+); shrinking them first makes decoding much faster.
+  // Uses the phone's built-in QR detector when available, otherwise html5-qrcode.
+  function scanPhoto(file) {
+    return shrinkPhoto(file, 1200).then(function(small) {
+      return nativeDetect(small.canvas).catch(function() {
+        return loadQrLibrary().then(function() {
+          return new Html5Qrcode('fileReader').scanFile(small.file, false);
+        }, function() { throw new Error('NO_LIBRARY'); });
+      });
+    }, function() {
+      return loadQrLibrary().then(function() {
+        return new Html5Qrcode('fileReader').scanFile(file, false);
+      }, function() { throw new Error('NO_LIBRARY'); });
+    });
+  }
+
+  function nativeDetect(canvas) {
+    if (!('BarcodeDetector' in window)) return Promise.reject(new Error('none'));
+    return new window.BarcodeDetector({ formats: ['qr_code'] }).detect(canvas).then(function(codes) {
+      if (!codes.length) throw new Error('none');
+      return codes[0].rawValue;
+    });
+  }
+
+  function shrinkPhoto(file, maxSide) {
+    return new Promise(function(resolve, reject) {
+      const url = URL.createObjectURL(file);
+      const img = new Image();
+      img.onload = function() {
+        URL.revokeObjectURL(url);
+        const scale = Math.min(1, maxSide / Math.max(img.naturalWidth, img.naturalHeight));
+        const canvas = document.createElement('canvas');
+        canvas.width = Math.max(1, Math.round(img.naturalWidth * scale));
+        canvas.height = Math.max(1, Math.round(img.naturalHeight * scale));
+        canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+        canvas.toBlob(function(blob) {
+          if (!blob) { reject(new Error('shrink')); return; }
+          resolve({ canvas: canvas, file: new File([blob], 'ticket.jpg', { type: 'image/jpeg' }) });
+        }, 'image/jpeg', 0.9);
+      };
+      img.onerror = function() { URL.revokeObjectURL(url); reject(new Error('shrink')); };
+      img.src = url;
+    });
+  }
+
+  $('manualForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    const value = $('manualId').value.trim();
+    if (value) onCode(value);
+  });
+
+  function onCode(text) {
+    if (busy) return;
+    busy = true;
+    setMessage('scanMessage', 'Checking ticket...', '');
+    $('result').innerHTML = '';
+
+    call('scannerLookup', token, text, team)
+      .then(function(ticket) {
+        setMessage('scanMessage', '');
+        render(ticket);
+      })
+      .catch(function(error) {
+        if (error.message.indexOf('SESSION_EXPIRED') === -1) setMessage('scanMessage', error.message, 'error');
+      })
+      .then(function() { busy = false; });
+  }
+
+  /* ---------- Result ---------- */
+  function el(tag, attrs, text) {
+    const node = document.createElement(tag);
+    Object.keys(attrs || {}).forEach(function(key) { node.setAttribute(key, attrs[key]); });
+    if (text != null) node.textContent = text;
+    return node;
+  }
+
+  function render(ticket, notice) {
+    currentTicket = ticket;
+    const box = $('result');
+    box.innerHTML = '';
+
+    if (notice) box.appendChild(el('div', { 'class': 'message success' }, notice));
+
+    if (!ticket.found) {
+      const status = el('div', { 'class': 'status notfound' });
+      status.appendChild(el('strong', null, '✖ TICKET NOT FOUND'));
+      status.appendChild(el('span', null, ticket.ticketId));
+      box.appendChild(status);
+      box.appendChild(nextButton());
+      return;
+    }
+
+    const cfg = TEAMS[ticket.team] || TEAMS.security;
+    const states = {
+      VALID: ['valid', '✔ VALID — ' + cfg.label.toUpperCase(), cfg.valid(ticket)],
+      USED: ['used', cfg.usedTitle, cfg.used(ticket)],
+      NOT_ELIGIBLE: ['noteligible', cfg.notEligibleTitle || '✖ NOT VALID', cfg.notEligible || ''],
+      NOT_PAID: ['notpaid', '⚠ NOT PAID', 'This ticket is not marked as paid']
+    };
+    const s = states[ticket.state];
+    const status = el('div', { 'class': 'status ' + s[0] });
+    status.appendChild(el('strong', null, s[1]));
+    status.appendChild(el('span', null, s[2]));
+    box.appendChild(status);
+
+    if (ticket.state !== 'NOT_ELIGIBLE' && ticket.state !== 'NOT_PAID') {
+      const counts = el('div', { 'class': 'counts' });
+      [[cfg.total, ticket.totalAllowed], [cfg.done, ticket.admitted], ['Remaining', ticket.remaining]]
+        .forEach(function(item) {
+          const cell = el('div');
+          cell.appendChild(el('b', null, String(item[1])));
+          cell.appendChild(el('small', null, item[0]));
+          counts.appendChild(cell);
+        });
+      box.appendChild(counts);
+    }
+
+    if (ticket.state === 'VALID') box.appendChild(admitPanel(ticket, cfg));
+
+    const packages = ticket.packages.length
+      ? ticket.packages.map(function(p) { return p.name + ' × ' + p.quantity; }).join('\n')
+      : '—';
+    const rows = ticket.team === 'security' ? [
+      ['Ticket ID', ticket.ticketId],
+      ['Name', ticket.firstName + ' ' + ticket.lastName],
+      ['Email', ticket.email],
+      ['Student?', ticket.student],
+      ['University', ticket.university || '—'],
+      ['Packages', packages],
+      ['Total paid', ticket.total],
+      ['Payment status', ticket.paymentStatus],
+      ['PayPal transaction', ticket.transactionId || '—'],
+      ['Registered', ticket.registeredAt],
+      ['Ticket email sent', ticket.emailSentAt || '—'],
+      ['Last check-in', ticket.lastCheckin || '—'],
+      ['Check-in log', ticket.checkinLog || '—']
+    ] : [
+      ['Ticket ID', ticket.ticketId],
+      [cfg.label + ' packages', packages]
+    ];
+    const table = el('table');
+    rows.forEach(function(r) {
+      const tr = el('tr');
+      tr.appendChild(el('td', null, r[0]));
+      tr.appendChild(el('td', { 'class': 'log' }, r[1]));
+      table.appendChild(tr);
+    });
+    box.appendChild(table);
+    box.appendChild(nextButton());
+  }
+
+  function admitPanel(ticket, cfg) {
+    const panel = el('div', { 'class': 'admit' });
+    panel.appendChild(el('label', { 'for': 'admitCount' }, cfg.question));
+    const select = el('select', { id: 'admitCount' });
+    for (let i = 1; i <= ticket.remaining; i++) {
+      const option = el('option', { value: String(i) }, String(i));
+      if (i === ticket.remaining) option.selected = true;
+      select.appendChild(option);
+    }
+    panel.appendChild(select);
+
+    const button = el('button', { type: 'button' });
+    const label = function() {
+      const n = Number(select.value);
+      button.textContent = cfg.action + ' ' + n + ' ' + (n === 1 ? cfg.one : cfg.many);
+    };
+    label();
+    select.addEventListener('change', label);
+
+    button.addEventListener('click', function() {
+      const n = Number(select.value);
+      if (!confirm(cfg.action + ' ' + n + ' ' + (n === 1 ? cfg.one : cfg.many) + ' for ticket ' + ticket.ticketId + '?')) return;
+      button.disabled = true;
+      button.textContent = 'Saving...';
+      // One ID per press: if the connection drops and the request is retried, it is counted only once.
+      const requestId = Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 12);
+      call('scannerAdmit', token, ticket.ticketId, n, ticket.team, requestId)
+        .then(function(updated) {
+          const verb = updated.team === 'security' ? 'allowed in' : 'served';
+          render(updated, '✔ ' + updated.justAdmitted + ' ' + (updated.justAdmitted === 1 ? cfg.one : cfg.many) + ' ' + verb + '.' +
+            (updated.remaining === 0 ? cfg.finished : ''));
+        })
+        .catch(function(error) {
+          if (error.message.indexOf('SESSION_EXPIRED') === -1) {
+            setMessage('scanMessage', error.message, 'error');
+            button.disabled = false;
+            label();
+          }
+        });
+    });
+    panel.appendChild(button);
+    return panel;
+  }
+
+  function nextButton() {
+    const button = el('button', { type: 'button', 'class': 'primary' }, 'Scan next ticket');
+    button.addEventListener('click', function() {
+      $('result').innerHTML = '';
+      $('manualId').value = '';
+      setMessage('scanMessage', '');
+      $('photoInput').click();
+    });
+    return button;
+  }
+</script>
+</body>
+</html>
+

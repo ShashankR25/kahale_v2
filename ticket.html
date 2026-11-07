@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="utf-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1">
+ <title>My Ticket | KAHALE Kannada Rajyotsava 2026</title>
+ <meta name="theme-color" content="#11100e">
+ <meta name="robots" content="noindex">
+ <link rel="icon" href="img/logo.jpg">
+<style>
+:root{--gold:#d6ad54;--gold-light:#f8e5ad;--red:#861d20;--text:#27231e;--muted:#706960;--border:#e8e0d3;--cream:#fffdf8}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;padding:18px 10px;min-height:100vh;background:radial-gradient(ellipse at top,#49301a 0,transparent 60%),#11100e;color:var(--text);font-family:Arial,Helvetica,sans-serif;line-height:1.5}
+.page{max-width:520px;margin:0 auto}
+.hero{padding:22px 16px;text-align:center;color:var(--gold-light);background:#000;border:1px solid #8e692e;border-bottom:4px solid var(--gold);border-radius:14px 14px 0 0}
+.hero .ornament{color:var(--gold);letter-spacing:8px;font-size:15px}
+.hero img{display:block;width:120px;max-width:40%;height:auto;margin:6px auto}
+.hero h1{margin:4px 0 2px;font-size:22px}
+.hero p{margin:0;color:#f5dca4;font-size:13px;letter-spacing:1px}
+.card{background:var(--cream);padding:22px 18px;border:1px solid var(--border);border-top:0;border-radius:0 0 14px 14px;text-align:center}
+h2{color:var(--red);font-size:21px;margin:10px 0 6px}
+.badge{display:inline-block;font-size:12px;font-weight:bold;letter-spacing:1px;padding:5px 12px;border-radius:999px;background:#e8f5e9;color:#1b5e20}
+.badge.pending{background:#fff3e0;color:#8a4b00}.badge.bad{background:#ffebee;color:#b71c1c}
+.ticket-box{margin:16px auto 6px;max-width:380px}
+.ticket-image{display:block;width:100%;height:auto;border-radius:12px;border:1px solid #e4ce9a;-webkit-touch-callout:default}
+.ticket-id{font-family:Consolas,Menlo,monospace;font-size:20px;font-weight:bold;letter-spacing:2px;margin:10px 0 2px}
+.ticket-actions{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+button{width:100%;border:0;border-radius:7px;padding:13px 16px;min-height:48px;font-size:16px;font-weight:bold;cursor:pointer;font-family:inherit}
+.save-button{background:var(--red);color:#fff}
+.ghost{background:#efe7d8;color:var(--text)}
+.ticket-link{display:none}
+.small-note{font-size:12.5px;color:var(--muted)}
+.save-note.highlight{color:#1b5e20;font-weight:bold}
+.details{text-align:left;margin:16px 0 0;font-size:14px;border-top:1px solid var(--border);padding-top:12px}
+.details p{margin:5px 0}
+.notice{text-align:left;background:#fff6df;border-left:4px solid var(--gold);border-radius:5px;padding:12px 14px;margin:16px 0 0;font-size:14px}
+.message{margin-top:14px;padding:12px;border-radius:6px;font-size:14px}
+.message.error{background:#ffebee;color:#b71c1c}
+.footer{padding:18px 10px;text-align:center;color:var(--gold-light);font-size:12.5px}
+.footer a{color:var(--gold-light)}
+.spinner{display:inline-block;width:22px;height:22px;border-radius:50%;border:3px solid #ecd9a8;border-top-color:var(--red);animation:spin 1s linear infinite;vertical-align:middle}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<div class="page">
+ <header class="hero">
+  <div class="ornament">✦ ✦ ✦</div>
+  <img src="img/logo.jpg" alt="KĀHALE crest">
+  <h1>ಕರ್ನಾಟಕ ರಾಜ್ಯೋತ್ಸವ ೨೦೨೬</h1>
+  <p>KARNATAKA RAJYOTSAVA 2026 · YOUR TICKET</p>
+ </header>
+ <main class="card">
+  <div id="loading"><span class="spinner" aria-hidden="true"></span> Loading your ticket&hellip;</div>
+  <div id="content" hidden>
+   <span id="badge" class="badge"></span>
+   <h2 id="title"></h2>
+   <p id="text"></p>
+   <div id="ticketBox" class="ticket-box"></div>
+   <div id="details" class="details"></div>
+   <div id="notice" class="notice"></div>
+   <p><button type="button" id="refresh" class="ghost" hidden>Check again</button></p>
+  </div>
+  <div id="error" class="message error" hidden></div>
+ </main>
+ <footer class="footer">
+  <p><a href="register.html">Registration</a> · <a href="index.html">KĀHALE</a></p>
+  <p>Questions? <a id="helpLink" href="#"></a></p>
+ </footer>
+</div>
+<script src="config.js"></script>
+<script src="vendor/qrcode.min.js"></script>
+<script src="app.js"></script>
+<script>
+(function () {
+  'use strict';
+  var K = window.Kahale, C = K.config;
+  var $ = function (id) { return document.getElementById(id); };
+  $('helpLink').textContent = C.HELP_EMAIL;
+  $('helpLink').href = 'mailto:' + C.HELP_EMAIL;
+
+  var m = /[?&]id=([^&#]*)/.exec(location.search);
+  var raw = m ? decodeURIComponent(m[1]) : '';
+  var id = String(raw).toUpperCase().replace(/[^A-Z0-9-]/g, '');
+  if (/^KAH[0-9A-F]{12}$/.test(id)) id = 'KAH-' + id.slice(3);
+  var CACHE = 'kahale_ticket_' + id;
+  var refreshTimer = null;
+
+  function fail(text) {
+    $('loading').hidden = true;
+    $('content').hidden = true;
+    $('error').hidden = false;
+    $('error').textContent = text;
+  }
+
+  if (!/^KAH-[0-9A-F]{12}$/.test(id)) {
+    fail('This ticket link is not complete. Please open the link from your ticket email again, or contact ' + C.HELP_EMAIL + '.');
+    return;
+  }
+
+  function show(t, offline) {
+    $('loading').hidden = true;
+    $('error').hidden = true;
+    $('content').hidden = false;
+    var badge = $('badge');
+    var details = $('details');
+    details.innerHTML = '';
+    var notice = $('notice');
+    clearTimeout(refreshTimer);
+    $('refresh').hidden = true;
+
+    if (t.status === 'paid') {
+      badge.textContent = '✔ PAID · VALID TICKET';
+      badge.className = 'badge';
+      $('title').textContent = t.firstName ? 'Hello ' + t.firstName + '!' : 'Your ticket';
+      $('text').textContent = 'Show this QR code at the entrance. One code admits your whole group.' +
+        (offline ? ' (Shown from this phone — no internet connection right now.)' : '');
+      K.renderTicket($('ticketBox'), t, { showPageLink: false });
+      K.rememberTicket(t);
+    } else if (t.status === 'pending') {
+      badge.textContent = 'PAYMENT BEING CHECKED';
+      badge.className = 'badge pending';
+      $('title').textContent = 'Almost there' + (t.firstName ? ', ' + t.firstName : '') + '!';
+      $('text').textContent = 'The organisers are confirming your PayPal payment. Your QR code appears here (and in your email) as soon as it is confirmed. This page checks again by itself.';
+      $('ticketBox').innerHTML = '';
+      $('ticketBox').appendChild(K.el('p', { 'class': 'ticket-id' }, t.ticketId));
+      $('refresh').hidden = false;
+      refreshTimer = setTimeout(load, 60000);
+    } else {
+      badge.textContent = 'NOT VALID';
+      badge.className = 'badge bad';
+      $('title').textContent = 'This ticket is not valid';
+      $('text').textContent = 'Please contact ' + C.HELP_EMAIL + ' about ticket ' + t.ticketId + '.';
+      $('ticketBox').innerHTML = '';
+    }
+
+    var guests = Number(t.guests) || 0;
+    var lines = [];
+    if (guests) lines.push(['Valid for', guests + (guests === 1 ? ' guest' : ' guests')]);
+    (t.packages || []).forEach(function (p) { lines.push([p.name, '× ' + p.quantity]); });
+    if (t.total) lines.push(['Total', '€' + t.total]);
+    var ev = t.event || {};
+    lines.push(['When', ev.date ? ev.date + ' · ' + ev.time : C.EVENT_DATE]);
+    lines.push(['Where', ev.venue ? ev.venue + ', ' + ev.address : C.EVENT_VENUE]);
+    lines.forEach(function (l) {
+      var p = K.el('p');
+      p.appendChild(K.el('strong', null, l[0] + ': '));
+      p.appendChild(document.createTextNode(l[1]));
+      details.appendChild(p);
+    });
+    notice.textContent = 'Students: bring your Student ID. Others: bring a valid ID such as a Residence Permit or Visa.';
+  }
+
+  function load() {
+    K.call('getTicket', { ticketId: id }, { retries: 3, timeoutMs: 30000 }).then(function (t) {
+      if (!t || !t.found) {
+        K.store.remove(CACHE);
+        fail('Ticket ' + id + ' was not found. Please check the link, or contact ' + C.HELP_EMAIL + '.');
+        return;
+      }
+      K.store.set(CACHE, t);
+      show(t, false);
+    }, function (error) {
+      var cached = K.store.get(CACHE);
+      if (cached && cached.ticketId === id) { show(cached, true); return; }
+      fail(error && error.temporary
+        ? 'No internet connection. Please try again in a moment — your ticket is also in your email.'
+        : (error && error.message) || 'Could not load the ticket.');
+    });
+  }
+
+  $('refresh').addEventListener('click', function () { $('refresh').disabled = true; load(); setTimeout(function () { $('refresh').disabled = false; }, 3000); });
+  document.addEventListener('visibilitychange', function () {
+    var c = K.store.get(CACHE);
+    if (document.visibilityState === 'visible' && c && c.status === 'pending') load();
+  });
+
+  // Show the saved copy at once (works offline at the venue), then refresh it.
+  var cached = K.store.get(CACHE);
+  if (cached && cached.ticketId === id) show(cached, false);
+  load();
+})();
+</script>
+</body>
+</html>

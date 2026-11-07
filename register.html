@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <meta charset="utf-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1">
+ <title>Register | KAHALE Kannada Rajyotsava 2026</title>
+ <meta name="theme-color" content="#11100e">
+ <link rel="icon" href="img/logo.jpg">
+<style>
+:root{--black:#14120f;--dark:#21180f;--gold:#d6ad54;--gold-light:#f8e5ad;--red:#861d20;--text:#27231e;--muted:#706960;--border:#e8e0d3;--cream:#fffdf8}
+*{box-sizing:border-box}
+body{margin:0;padding:24px 14px;background:radial-gradient(ellipse at top,#49301a 0,transparent 60%),#11100e;color:var(--text);font-family:Arial,Helvetica,sans-serif;line-height:1.55}
+.page{max-width:780px;margin:0 auto}
+.hero{padding:34px 22px;text-align:center;color:var(--gold-light);background: #000000;border:1px solid #8e692e;border-bottom:4px solid var(--gold);border-radius:14px 14px 0 0;overflow:hidden}
+.ornament{color:var(--gold);letter-spacing:10px;font-size:18px;margin-bottom:12px}
+.eyebrow{color:var(--gold);font-size:11px;font-weight:bold;letter-spacing:2px}
+.hero h1{font-size:clamp(28px,6vw,43px);margin:14px 0 3px;line-height:1.35}
+.hero h2{color:#fff7e4;font-size:clamp(17px,4vw,25px);letter-spacing:2px;margin:4px 0 16px}
+.tagline{font-size:14px;color:#f5dca4;margin:15px auto}
+.hero-divider{width:100px;height:2px;margin:18px auto;background:var(--gold)}
+.event-detail{margin:5px 0;color:#fff}.event-address{font-size:14px;color:#e3d6c3;margin-bottom:0}
+.form-card{background:var(--cream);padding:28px;border:1px solid var(--border);border-top:0;border-radius:0 0 14px 14px}
+.intro{padding-bottom:12px;border-bottom:1px solid var(--border)}
+.intro h2{margin:0 0 5px;color:var(--red);font-size:25px}
+.intro p,.muted{color:var(--muted);font-size:14px}
+.section{margin-top:27px}.section h3{font-size:18px;color:var(--red);border-bottom:2px solid var(--gold);padding-bottom:9px;margin:0 0 18px}
+.two-columns{display:grid;grid-template-columns:1fr 1fr;gap:16px}.field{min-width:0;margin-bottom:15px}
+.field label,.package-info>label{display:block;margin-bottom:7px;font-size:14px;font-weight:bold}
+.field label span{color:var(--red)}
+.field label .paypal-name{font-weight:normal;color:#7a6f60;font-size:12px}
+.paypal-name-note{margin:-6px 0 14px;font-size:13px;color:#7a6f60}
+input:not([type=checkbox]),select{width:100%;min-height:44px;padding:10px 12px;background:#fff;border:1px solid #d6cfc3;border-radius:6px;color:var(--text);font-size:15px}
+input:focus,select:focus{outline:2px solid #d6ad5480;border-color:#b68b37}
+.notice{background:#fff6df;border-left:4px solid var(--gold);border-radius:5px;padding:13px 15px;margin:16px 0;font-size:14px}.notice p{margin:7px 0}
+.payment-rules{background:#fdecea;border-left-color:var(--red)}.payment-rules ul{margin:8px 0 0;padding-left:20px}.payment-rules li{margin:5px 0}
+.no-paypal a{color:var(--red);font-weight:bold;display:inline-block;max-width:100%;overflow-wrap:anywhere}
+.rules-confirmation{margin-top:12px;padding-top:10px;border-top:1px solid #ecc8c4}.rules-confirmation em{font-style:normal;color:var(--red)}
+.rules-confirmation.attention{animation:rulesBlink .5s ease 3}@keyframes rulesBlink{50%{background:#f8c9c4}}
+.paypal-button.locked{opacity:.55}
+.package{display:flex;flex-direction:column;border:1px solid var(--border);border-radius:10px;overflow:hidden;margin:15px 0;background:#fff;min-width:0}
+.package.featured{border:2px solid var(--gold);background:#fffdf5}
+.package-icon{display:block;width:100%;min-width:0;min-height:0;overflow:hidden;background:#2b1c10;line-height:0}
+
+.package-info{min-width:0;padding:15px}
+.package-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.package-heading h4{margin:0;font-size:16px;color:var(--text)}
+.package-heading strong{color:var(--red);font-size:19px;white-space:nowrap}
+.package-info p{margin:8px 0 12px;font-size:13px;color:var(--muted)}
+.package-info select{max-width:125px}
+.total-row{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:22px;padding:19px;border:1px solid #e4ce9a;border-radius:8px;background:#fff3d4}
+.total-row span{font-weight:bold}.total-row strong{font-size:25px;color:var(--red);white-space:nowrap}
+button{width:100%;border:0;border-radius:7px;padding:14px 18px;min-height:48px;font-size:16px;font-weight:bold;cursor:pointer;transition:background .2s ease,transform .2s ease}
+button:hover{transform:translateY(-1px)}button:disabled{cursor:wait;opacity:.65;transform:none}
+.paypal-button{margin-top:10px;background:#fff;color:#202020;border:2px solid #ffc439}.paypal-button:hover{background:#fff6df}
+.submit-button{margin-top:16px;background:var(--red);color:#fff}.submit-button:hover{background:#681416}
+.small-note{font-size:12px;color:var(--muted);text-align:center}
+.confirmation{display:flex;align-items:flex-start;gap:10px;margin-top:23px;font-size:13px;line-height:1.5}
+.confirmation input{width:17px;height:17px;flex:0 0 17px;margin-top:3px;accent-color:var(--red)}
+.message{display:none;margin-top:18px;padding:13px;border-radius:6px;font-size:14px;overflow-wrap:anywhere}
+.message:not(:empty){display:block}.message.success{background:#e8f5e9;color:#1b5e20}.message.error{background:#ffebee;color:#b71c1c}
+.footer{padding:20px 12px;text-align:center;color:var(--gold-light);font-size:13px}.footer p{margin:4px 0}
+@media(max-width:560px){body{padding:10px 7px}.hero{padding:27px 15px}.form-card{padding:19px 14px}.two-columns{grid-template-columns:1fr;gap:0}.package{grid-template-columns:94px minmax(0,1fr);min-height:180px}.package-icon{min-height:180px}.package-info{padding:12px 10px}.package-heading{flex-direction:column;gap:2px}.package-heading strong{font-size:18px}.total-row{padding:14px}}
+
+.package-icon {
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ width:100%;
+ min-width:0;
+ min-height:205px;
+ overflow:hidden;
+ background:#2b1c10;
+}
+.package-icon img {
+ display:block;
+ width:100%;
+ height:100%;
+ min-height:205px;
+ align-self:stretch;
+ object-fit:cover;
+ object-position:center;
+}
+@media(max-width:560px){.package-icon{min-height:0}.package-icon img{height:auto;min-height:0}}
+
+
+
+
+
+.minimum-order-note {
+  margin: 8px 0 0;
+  color: #706960;
+  font-size: 12px;
+  text-align: right;
+}
+
+
+.hero-logo {
+  width: 195px;
+  max-width: 42%;
+  margin: 0 auto 10px;
+  line-height: 0;
+}
+.hero-logo img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  object-fit: contain;
+  margin: 0 auto;
+}
+@media (max-width: 560px) {
+  .hero-logo {
+    width: 145px;
+    max-width: 46%;
+    margin-bottom: 8px;
+  }
+}
+
+
+.event-detail.venue {
+  font-weight: 700;
+  font-size: calc(1em + 2pt);
+}
+
+
+.verify-button{margin-top:2px;background:#14120f;color:var(--gold-light)}
+.verify-button:hover{background:#2b1c10}
+.verify-status{display:none;margin-top:10px;padding:11px 13px;border-radius:6px;font-size:14px;overflow-wrap:anywhere}
+.verify-status.show{display:block}
+.verify-status.ok{background:#e8f5e9;color:#1b5e20}
+.verify-status.fail{background:#ffebee;color:#b71c1c}
+.verify-status.wait{background:#fff6df;color:#5b4a1c}
+.submit-button:disabled{cursor:not-allowed}
+.help-section{margin-top:18px;background:var(--cream);border:1px solid var(--border);border-top:4px solid var(--gold);border-radius:14px;overflow:hidden}
+.help-section summary{cursor:pointer;list-style:none;padding:16px 20px;font-weight:bold;font-size:17px;color:var(--red)}
+.help-section summary::-webkit-details-marker{display:none}
+.help-section summary::after{content:"+";float:right;color:var(--gold);font-size:22px;line-height:1}
+.help-section details[open] summary::after{content:"\2212"}
+.help-body{padding:0 20px 18px;font-size:14px}
+.help-body p{margin:6px 0}
+.help-contact{background:#fff6df;border-left:4px solid var(--gold);border-radius:5px;padding:12px 15px}
+.help-contact a{color:var(--red);font-weight:bold}
+
+.email-note{display:block;margin-top:5px;font-size:12px;color:#7a6f60}
+.email-match{display:block;margin-top:5px;font-size:12px;min-height:1em}
+.email-match.ok{color:#1b5e20}
+.email-match.bad{color:#b71c1c;font-weight:bold}
+.pay-help[hidden]{display:none}
+.pay-help ol{margin:6px 0 0;padding-left:20px}
+.pay-help li{margin:7px 0}
+.pay-again{display:block;margin:10px 0;padding:12px 14px;border-radius:7px;background:#ffc439;color:#202020;font-weight:bold;text-align:center;text-decoration:none}
+.pay-again:hover{background:#f2b72c}
+.copy-button{display:inline-block;width:auto;min-height:0;margin:0 0 0 6px;padding:3px 10px;font-size:12px;border:1px solid #c9b98f;border-radius:4px;background:#fff;color:#333;vertical-align:middle}
+.copy-button:hover{transform:none;background:#f6f0e2}
+.paypal-web-button{display:block;margin-top:5px;padding:14px 18px;min-height:48px;border:0;border-radius:7px;background:#ffc439;color:#202020;font-size:16px;font-weight:bold;text-align:center;text-decoration:none;line-height:20px}
+.paypal-web-button:hover{background:#f2b72c}
+.paypal-web-button.locked{opacity:.55}
+.pay-choice-note{margin:6px 0 0}
+.pay-help a{color:var(--red);font-weight:bold;overflow-wrap:anywhere}
+.pay-help a.pay-again{color:#202020}
+
+/* ---- auto-verify additions ---- */
+[hidden]{display:none!important}
+.paypal-main-button{margin-top:6px;background:#ffc439;color:#202020}.paypal-main-button:hover{background:#f2b72c}
+.paypal-main-button.locked{opacity:.55}
+.ghost-button{margin-top:12px;background:#efe7d8;color:var(--text)}.ghost-button:hover{background:#e6dcc8}
+.link-button{width:auto;min-height:0;margin:14px auto 0;display:block;padding:6px 10px;background:none;color:var(--muted);font-size:13px;font-weight:normal;text-decoration:underline}
+.link-button:hover{transform:none;color:var(--red)}
+.pay-choice-note a{color:var(--red);font-weight:bold}
+.wait-panel{margin-top:16px;padding:16px;border:2px solid var(--gold);border-radius:10px;background:#fffaf0}
+.wait-head{display:flex;gap:12px;align-items:flex-start}
+.wait-head strong{display:block;font-size:16px;color:var(--red)}
+.wait-head p{margin:4px 0 0;font-size:14px}
+.wait-panel .verify-button{margin-top:14px}
+.wait-panel .message{margin-top:12px}
+.manual-pay{margin-top:12px;font-size:14px}
+.manual-pay summary{cursor:pointer;font-weight:bold;color:var(--red);padding:6px 0}
+.manual-pay ol{margin:6px 0 0;padding-left:20px}.manual-pay li{margin:7px 0}
+.wait-panel .pay-again{background:#fff;border:2px solid #ffc439;font-size:14px;font-weight:bold;padding:10px 12px}
+.wait-panel .pay-again:hover{background:#fff6df}
+.pending-offer{background:#fff3e0;border-left-color:#c46a00}
+.pending-offer .submit-button{margin-top:8px}
+.spinner{flex:0 0 22px;width:22px;height:22px;border-radius:50%;border:3px solid #ecd9a8;border-top-color:var(--red);animation:spin 1s linear infinite;margin-top:2px}
+.spinner.small{flex-basis:16px;width:16px;height:16px;border-width:2px;margin:0}
+.spinner.stopped{animation:none;border-top-color:#ecd9a8}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.spinner{animation-duration:3s}}
+.status-bar{position:fixed;left:12px;right:12px;bottom:max(12px,env(safe-area-inset-bottom));z-index:20;display:flex;align-items:center;gap:10px;max-width:560px;margin:0 auto;padding:11px 16px;border-radius:12px;background:#14120f;border:1px solid #8e692e;color:var(--gold-light);font-size:14px;box-shadow:0 4px 16px rgba(0,0,0,.35);cursor:pointer}
+.status-bar #statusBarText{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.status-bar .go{flex:0 0 auto;font-weight:bold;color:var(--gold)}
+.done-panel{padding-top:6px;text-align:center}
+.done-panel h2{color:var(--red);margin:12px 0 6px}
+.done-panel>p{font-size:15px}
+.done-panel .notice{text-align:left}
+.done-badge{display:inline-block;background:#e8f5e9;color:#1b5e20;font-size:12px;font-weight:bold;letter-spacing:1px;padding:5px 12px;border-radius:999px}
+.done-badge.pending{background:#fff3e0;color:#8a4b00}
+.ticket-box{margin:16px auto 6px;max-width:380px}
+.ticket-image{display:block;width:100%;height:auto;border-radius:12px;border:1px solid #e4ce9a;-webkit-touch-callout:default}
+.ticket-id{font-family:Consolas,Menlo,monospace;font-size:20px;font-weight:bold;letter-spacing:2px;margin:10px 0 2px}
+.ticket-actions{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+.save-button{background:var(--red);color:#fff}
+.ticket-link{display:block;padding:12px;border-radius:7px;border:2px solid var(--red);color:var(--red);font-weight:bold;text-decoration:none}
+.save-note.highlight{color:#1b5e20;font-weight:bold}
+.my-tickets{margin:0 0 6px}
+.my-tickets a{color:var(--red);font-weight:bold}
+</style>
+
+</head>
+
+<body>
+
+ <div class="page">
+
+ <header class="hero">
+ <div class="ornament">✦ ✦ ✦</div>
+ <p class="eyebrow"> · </p>
+ <div class="hero-logo"><img src="img/logo.jpg"
+ alt="Kāhaḷe Karnataka Rajyotsava crest"></div>
+      <h1>ಕರ್ನಾಟಕ ರಾಜ್ಯೋತ್ಸವ ೨೦೨೬</h1>
+ <h2>KARNATAKA RAJYOTSAVA 2026</h2>
+ <p class="tagline">
+ ಎಲ್ಲಾದರೂ ಇರು, ಎಂತಾದರೂ ಇರು, ಎಂದೆಂದಿಗೂ ನೀ ಕನ್ನಡವಾಗಿರು
+ </p>
+ <div class="hero-divider"></div>
+ <p class="event-detail"><strong>15 November 2026 · 14:00</strong></p>
+ <p class="event-detail venue">TRANSIT CLUB</p>
+ <p class="event-address">Reichenhainer Str. 1, 09111 Chemnitz</p>
+ </header>
+
+ <main class="form-card">
+ <div class="intro">
+ <h2>Event Registration</h2>
+ <p>
+ Join us to celebrate our heritage and culture in Chemnitz.
+ </p>
+ </div>
+
+ <form id="registrationForm">
+ <section class="section">
+ <h3>01 — Applicant Information</h3>
+
+ <div class="two-columns">
+ <div class="field">
+ <label for="firstName">First Name <small class="paypal-name">(as on your PayPal account)</small> <span>*</span></label>
+ <input id="firstName" name="firstName"
+ type="text" maxlength="100" required>
+ </div>
+
+ <div class="field">
+ <label for="lastName">Last Name <small class="paypal-name">(as on your PayPal account)</small> <span>*</span></label>
+ <input id="lastName" name="lastName"
+ type="text" maxlength="100" required>
+ </div>
+ </div>
+ <p class="paypal-name-note">Please enter the name exactly as it appears on the PayPal account you pay with. If someone else pays for you, enter their PayPal name.</p>
+
+ <div class="field">
+ <label for="email">Email Address <span>*</span></label>
+ <input id="email" name="email" type="email"
+ maxlength="200" autocomplete="email" required>
+ <small class="email-note">Your QR ticket is sent to this address &mdash; please check it carefully.</small>
+ </div>
+
+ <div class="field">
+ <label for="emailConfirm">Confirm Email Address <span>*</span></label>
+ <input id="emailConfirm" name="emailConfirm" type="email"
+ maxlength="200" autocomplete="off" required>
+ <small id="emailMatchNote" class="email-match" aria-live="polite"></small>
+ </div>
+
+ <div class="two-columns">
+ <div class="field">
+ <label for="student">Are you a student? <span>*</span></label>
+ <select id="student" name="student" required>
+ <option value="">Please select</option>
+ <option value="Yes">Yes</option>
+ <option value="No">No</option>
+ </select>
+ </div>
+
+ <div class="field">
+ <label for="university">University</label>
+ <select id="university" name="university">
+ <option value="">Please select</option>
+ <option value="Technische Universität Chemnitz">Technische Universität Chemnitz</option>
+ <option value="Hochschule Zwickau">Hochschule Zwickau</option>
+ <option value="Other">Other</option>
+ </select>
+ </div>
+ </div>
+
+ <div class="notice">
+ <strong>Please remember:</strong>
+ Bring your Student ID if you are a student.
+ Non-students should bring valid ID proof, such as a
+ Residence Permit or Visa.
+ </div>
+ </section>
+
+ <section class="section">
+ <h3>02 — Registration for the Event</h3>
+ <p class="muted">
+ Select the quantity for each package. Leave packages at 0
+ if you do not want them.
+ </p>
+
+ <div class="package">
+ <div class="package-icon"><img src="img/entry.jpg" alt="Karnataka Rajyotsava Entry Pass artwork" loading="eager"></div>
+ <div class="package-info">
+ <div class="package-heading">
+ <h4>Entry Pass</h4>
+ <strong>€2.99</strong>
+ </div>
+ <p>Entry to the event.</p>
+ <label for="entryQty">Quantity</label>
+ <select id="entryQty" name="entryQty"
+ class="quantity" data-price="299">
+                  <option value="0">0</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                  <option value="6">6</option>
+                  <option value="7">7</option>
+                  <option value="8">8</option>
+                  <option value="9">9</option>
+                  <option value="10">10</option>
+
+ </select>
+ </div>
+ </div>
+
+ <div class="package">
+ <div class="package-icon"><img src="img/dinner.jpg" alt="Karnataka Rajyotsava Entry Pass with Dinner artwork" loading="eager"></div>
+ <div class="package-info">
+ <div class="package-heading">
+ <h4>Entry Pass with Dinner</h4>
+ <strong>€6.99</strong>
+ </div>
+ <p>
+ Veg Pulao, Veg Kurma, Dessert and Raita.
+ </p>
+ <label for="dinnerQty">Quantity</label>
+ <select id="dinnerQty" name="dinnerQty"
+ class="quantity" data-price="699">
+                  <option value="0">0</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                  <option value="6">6</option>
+                  <option value="7">7</option>
+                  <option value="8">8</option>
+                  <option value="9">9</option>
+                  <option value="10">10</option>
+
+ </select>
+ </div>
+ </div>
+
+ <div class="package">
+ <div class="package-icon"><img src="img/snacks.jpg" alt="Karnataka Rajyotsava Entry Pass with Snacks artwork" loading="eager"></div>
+ <div class="package-info">
+ <div class="package-heading">
+ <h4>Entry Pass with Snacks</h4>
+ <strong>€4.99</strong>
+ </div>
+ <p>One snack.</p>
+ <label for="snackQty">Quantity</label>
+ <select id="snackQty" name="snackQty"
+ class="quantity" data-price="499">
+                  <option value="0">0</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                  <option value="6">6</option>
+                  <option value="7">7</option>
+                  <option value="8">8</option>
+                  <option value="9">9</option>
+                  <option value="10">10</option>
+
+ </select>
+ </div>
+ </div>
+
+ <div class="package featured">
+ <div class="package-icon"><img src="img/deal.jpg" alt="Karnataka Rajyotsava Deal of the Day artwork" loading="eager"></div>
+ <div class="package-info">
+ <div class="package-heading">
+ <h4>Deal of the Day</h4>
+ <strong>€7.99</strong>
+ </div>
+ <p>Entry Pass, Dinner and Snacks.</p>
+ <label for="dealQty">Quantity</label>
+ <select id="dealQty" name="dealQty"
+ class="quantity" data-price="799">
+                  <option value="0">0</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                  <option value="6">6</option>
+                  <option value="7">7</option>
+                  <option value="8">8</option>
+                  <option value="9">9</option>
+                  <option value="10">10</option>
+
+ </select>
+ </div>
+ </div>
+
+ <div class="total-row">
+ <span>Total to pay</span>
+ <strong>€<span id="total">0.00</span></strong>
+ </div>
+<p class="minimum-order-note">Minimum order: €2.99</p>
+ </section>
+ <section class="section" id="paymentSection">
+ <h3>03 — Payment</h3>
+
+ <div id="payInfo">
+ <div class="notice">
+ <strong>Pay using PayPal</strong>
+ <p>
+ Fill in your details above, tap the PayPal button and pay. Then simply come back to this page &mdash;
+ it finds your payment by itself and sends your QR ticket. No transaction ID needed.
+ </p>
+ </div>
+
+ <div class="notice payment-rules">
+ <strong>Please follow these rules before paying:</strong>
+ <ul>
+ <li><strong>Select all your items before clicking the PayPal button.</strong> Do not change them after paying.</li>
+ <li><strong>Pay exactly <span class="rule-amount">the total shown on the button</span>.</strong> Do not change the amount or the currency (EUR).</li>
+ <li><strong>When PayPal asks what the payment is for, choose &ldquo;Friends and family&rdquo; (&ldquo;Freunde und Familie&rdquo;).</strong></li>
+ <li><strong>Make one payment per registration.</strong></li>
+ <li><strong>Your first and last name above must be the name on the PayPal account you pay with.</strong></li>
+ </ul>
+ <label class="confirmation rules-confirmation" for="rulesAccepted">
+ <input type="checkbox" id="rulesAccepted" name="rulesAccepted" required>
+ <span><strong>My details are correct, I have read these rules and I will pay the exact amount shown.</strong> <em>(required)</em></span>
+ </label>
+ </div>
+
+ <div class="notice no-paypal">
+ <strong>Don't have PayPal?</strong>
+ <p>Please email us at <a class="help-email-link" href="mailto:kahalekarnataka1973@gmail.com">kahalekarnataka1973@gmail.com</a> and we will help you register.</p>
+ </div>
+ </div>
+
+ <div id="payArea">
+ <button type="button" id="payButton" class="paypal-main-button">
+ Pay €<span id="payAmount">0.00</span> with PayPal
+ </button>
+ <p class="small-note pay-choice-note" id="payNote">Opens PayPal (app or website). After paying, come back here &mdash; your details stay filled in.</p>
+ <p class="small-note pay-choice-note">
+ <a href="#" id="payWebLink">PayPal app not working? Pay on the PayPal website instead</a>
+ </p>
+ <button type="button" id="alreadyPaidButton" class="ghost-button">I have already paid &mdash; find my payment</button>
+ </div>
+
+ <div id="waitPanel" class="wait-panel" hidden>
+ <div class="wait-head">
+ <span class="spinner" id="waitSpinner" aria-hidden="true"></span>
+ <div>
+ <strong id="waitTitle">Waiting for your PayPal payment of €<span class="wait-amount">0.00</span></strong>
+ <p id="waitStatus" role="status" aria-live="polite">Pay on PayPal, then come back to this page. We check for your payment automatically.</p>
+ </div>
+ </div>
+ <div id="waitProblem" class="message error" role="alert"></div>
+
+ <button type="button" id="checkNowButton" class="verify-button">Check now</button>
+ <a href="#" id="payAgainLink" class="pay-again">Not paid yet? Open PayPal again (€<span class="wait-amount">0.00</span>)</a>
+
+ <details class="manual-pay" id="manualPay">
+ <summary>PayPal did not open or showed no payment page?</summary>
+ <ol>
+ <li>Open the PayPal app or paypal.com and tap <strong>Send</strong> (&ldquo;Senden&rdquo;).</li>
+ <li>Search for <strong>@<span class="pp-user">Abhay2309</span></strong> (<span class="pp-name">Abhay Sathyanarayana Rao</span>).<button type="button" class="copy-button" id="copyUser">Copy</button></li>
+ <li>Enter exactly <strong><span class="wait-amount-local">0,00</span>&nbsp;&euro;</strong> (<span class="wait-amount-words"></span>).<button type="button" class="copy-button" id="copyAmount">Copy</button></li>
+ <li>Choose <strong>Friends and family</strong> (&ldquo;Freunde und Familie&rdquo;) and send.</li>
+ <li>Come back to this page &mdash; it finds the payment by itself.</li>
+ </ol>
+ <p>The PayPal app asks you to &ldquo;Add a payment method&rdquo; although you have one? Tap the payment method shown (or &ldquo;&Auml;ndern&rdquo; / &ldquo;Change&rdquo;) first, or use &ldquo;Pay on the PayPal website&rdquo;.</p>
+ </details>
+
+ <div id="pendingOffer" class="notice pending-offer" hidden>
+ <strong>Still not found?</strong>
+ <p>PayPal sometimes takes a few minutes. Check that your first and last name above are exactly as on your PayPal account and that you paid exactly <strong>€<span class="wait-amount">0.00</span></strong>.</p>
+ <p>If you are sure you paid, submit now: the organisers will confirm your payment and your QR ticket will be emailed to you. <strong>Please do not pay twice.</strong></p>
+ <button type="button" id="pendingButton" class="submit-button">Submit &mdash; organisers will check my payment</button>
+ </div>
+
+ <button type="button" id="changeOrderButton" class="link-button">Change my order (I have not paid yet)</button>
+ </div>
+
+ <div id="message" class="message" role="status" aria-live="polite"></div>
+ </section>
+ </form>
+
+ <section id="donePanel" class="done-panel" hidden>
+ <div class="done-badge" id="doneBadge">&#10004; REGISTRATION CONFIRMED</div>
+ <h2 id="doneTitle">Thank you for registering!</h2>
+ <p id="doneText"></p>
+ <div id="ticketBox" class="ticket-box"></div>
+ <div class="notice">
+ <strong>At the entrance:</strong> show this QR code (on your phone or printed). Students: bring your Student ID.
+ Others: bring a valid ID such as a Residence Permit or Visa.
+ </div>
+ <button type="button" id="anotherButton" class="ghost-button">Register another person</button>
+ </section>
+ </main>
+
+ <section class="help-section" id="help">
+ <details>
+ <summary>&#10067; Help</summary>
+ <div class="help-body">
+ <p>Questions about registration, payment or your ticket? Contact us:</p>
+ <p class="help-contact">
+ <strong>Abhay</strong><br>
+ <a href="mailto:kahalekarnataka1973@gmail.com">kahalekarnataka1973@gmail.com</a>
+ <br>
+<a href="tel:+4915510589814">+49 15510589814</a>
+<br>
+<a href="tel:+4915510645570">+49 15510645570</a>
+ </p>
+ <p class="small-note">Please include your name and your Ticket ID if you have one.</p>
+ </div>
+ </details>
+ </section>
+
+ <footer class="footer">
+ <p>KAHALE · Karnataka Rajyotsava 2026</p>
+ <p>Celebrating our culture in Chemnitz, Germany</p>
+ </footer>
+ </div>
+
+ <div id="statusBar" class="status-bar" hidden>
+ <span class="spinner small" aria-hidden="true"></span>
+ <span id="statusBarText">Checking your payment&hellip;</span>
+ <span class="go">View &rsaquo;</span>
+ </div>
+
+<script src="config.js"></script>
+<script src="vendor/qrcode.min.js"></script>
+<script src="app.js"></script>
+<script src="register.js"></script>
+</body>
+</html>
