@@ -8,12 +8,12 @@
  * Prices are in register.html (data-price) and must match PACKAGE_PRICES in Code.gs.
  */
 window.KAHALE_CONFIG = {
-  API_URL: 'https://script.google.com/macros/s/AKfycby4NeWoDUEJDllFD0IIu3t6xXoxm2LRGAlaOed5GkZq1WlSQFX-AaNsnn55gr5CD-iS/exec',
-  PAYPAL_ME_USERNAME: 'DarshanKantharaju',
-  PAYPAL_DISPLAY_NAME: 'Darshan Kantharaju',
+  API_URL: 'https://script.google.com/macros/s/AKfycbzejnUlHlKjn8K4TpIT6xI63j8epHh1l_stGXLHT2wzH0_kOFdpQ4tecR5XpHftC9A/exec',
+  PAYPAL_ME_USERNAME: 'Abhay2309',
+  PAYPAL_DISPLAY_NAME: 'Abhay Sathyanarayana Rao',
   HELP_NAME: 'Abhay',
   HELP_EMAIL: 'kahalekarnataka1973@gmail.com',
-  EVENT_TITLE: 'KĀHALE · Kannada Rajyotsava 2026',
+  EVENT_TITLE: 'KAHALE · Karnataka Rajyotsava 2026',
   EVENT_DATE: '15 November 2026 · 14:00',
   EVENT_VENUE: 'Transit Club, Reichenhainer Str. 1, 09111 Chemnitz',
 
