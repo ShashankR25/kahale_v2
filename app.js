@@ -159,7 +159,7 @@
     g.fillStyle = '#d6ad54'; g.font = '28px Arial, Helvetica, sans-serif';
     g.fillText('✦  ✦  ✦', W / 2, 82);
     g.fillStyle = '#f8e5ad'; g.font = 'bold 42px Arial, Helvetica, sans-serif';
-    g.fillText('KANNADA RAJYOTSAVA 2026', W / 2, 140);
+    g.fillText('KARNATAKA RAJYOTSAVA 2026', W / 2, 140);
     g.fillStyle = '#fff7e4'; g.font = '26px Arial, Helvetica, sans-serif';
     g.fillText('KĀHALE · ENTRY TICKET', W / 2, 186);
     // card
