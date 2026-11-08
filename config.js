@@ -13,6 +13,10 @@ window.KAHALE_CONFIG = {
   PAYPAL_DISPLAY_NAME: 'Abhay Sathyanarayana Rao',
   HELP_NAME: 'Abhay',
   HELP_EMAIL: 'kahalekarnataka1973@gmail.com',
+
+  // No PayPal? Link to the existing Google Form for bank transfer / cash at the stall.
+  // Leave empty ('') to hide the button.
+  ALT_PAYMENT_FORM_URL: 'https://forms.gle/6tfZgiyCSfm9suvv8',
   EVENT_TITLE: 'KAHALE · Karnataka Rajyotsava 2026',
   EVENT_DATE: '15 November 2026 · 14:00',
   EVENT_VENUE: 'Transit Club, Reichenhainer Str. 1, 09111 Chemnitz',

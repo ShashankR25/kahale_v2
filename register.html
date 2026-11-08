@@ -164,6 +164,11 @@ button:hover{transform:translateY(-1px)}button:disabled{cursor:wait;opacity:.65;
 .paypal-main-button{margin-top:6px;background:#ffc439;color:#202020}.paypal-main-button:hover{background:#f2b72c}
 .paypal-main-button.locked{opacity:.55}
 .ghost-button{margin-top:12px;background:#efe7d8;color:var(--text)}.ghost-button:hover{background:#e6dcc8}
+.alt-pay[hidden]{display:none}
+.alt-pay-divider{display:flex;align-items:center;gap:10px;margin:18px 0 6px;color:var(--muted);font-size:13px;text-transform:uppercase;letter-spacing:.08em}
+.alt-pay-divider::before,.alt-pay-divider::after{content:"";flex:1;border-top:1px solid var(--border)}
+.alt-pay-button{display:block;margin-top:6px;padding:14px 18px;min-height:48px;border:2px solid var(--red);border-radius:7px;background:#fff;color:var(--red);font-size:16px;font-weight:bold;text-align:center;text-decoration:none;line-height:20px;transition:background .2s ease,transform .2s ease}
+.alt-pay-button:hover{background:#fdecea;transform:translateY(-1px)}
 .link-button{width:auto;min-height:0;margin:14px auto 0;display:block;padding:6px 10px;background:none;color:var(--muted);font-size:13px;font-weight:normal;text-decoration:underline}
 .link-button:hover{transform:none;color:var(--red)}
 .pay-choice-note a{color:var(--red);font-weight:bold}
@@ -449,7 +454,8 @@ button:hover{transform:translateY(-1px)}button:disabled{cursor:wait;opacity:.65;
 
  <div class="notice no-paypal">
  <strong>Don't have PayPal?</strong>
- <p>Please email us at <a class="help-email-link" href="mailto:kahalekarnataka1973@gmail.com">kahalekarnataka1973@gmail.com</a> and we will help you register.</p>
+ <p>No problem &mdash; you can pay by <strong>bank transfer</strong> or in <strong>cash at our stall</strong>. Use the button below the PayPal button to register through our form.</p>
+ <p>Questions? Email <a class="help-email-link" href="mailto:kahalekarnataka1973@gmail.com">kahalekarnataka1973@gmail.com</a>.</p>
  </div>
  </div>
 
@@ -462,6 +468,11 @@ button:hover{transform:translateY(-1px)}button:disabled{cursor:wait;opacity:.65;
  <a href="#" id="payWebLink">PayPal app not working? Pay on the PayPal website instead</a>
  </p>
  <button type="button" id="alreadyPaidButton" class="ghost-button">I have already paid &mdash; find my payment</button>
+ <div class="alt-pay" id="altPay">
+ <div class="alt-pay-divider"><span>or</span></div>
+ <a href="#" id="altPayButton" class="alt-pay-button" target="_blank" rel="noopener">No PayPal? Pay by bank transfer or cash at stall</a>
+ <p class="small-note pay-choice-note">Opens our registration form in a new tab. Fill it in there &mdash; you do not need to continue on this page.</p>
+ </div>
  </div>
 
  <div id="waitPanel" class="wait-panel" hidden>

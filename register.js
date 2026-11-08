@@ -702,6 +702,15 @@
   setText('.pp-user', C.PAYPAL_ME_USERNAME);
   setText('.pp-name', C.PAYPAL_DISPLAY_NAME);
 
+  // "No PayPal?" button -> existing Google Form (bank transfer / cash at stall)
+  (function () {
+    var url = (C.ALT_PAYMENT_FORM_URL || '').trim();
+    var box = $('altPay'), btn = $('altPayButton');
+    if (!box || !btn) return;
+    if (!/^https?:\/\//.test(url)) { box.hidden = true; return; }
+    btn.href = url;
+  })();
+
   /* ---------------- start ---------------- */
 
   function resumeFrom(st) {
