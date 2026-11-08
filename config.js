@@ -8,7 +8,7 @@
  * Prices are in register.html (data-price) and must match PACKAGE_PRICES in Code.gs.
  */
 window.KAHALE_CONFIG = {
-  API_URL: 'https://script.google.com/macros/s/AKfycbwK0nXzOyodNVZhx4LvJLStHNdJyMtpJ0dClUcq1ZS8Kq6ad8zhLSk9E2BJULVrJEOH/exec',
+  API_URL: 'https://script.google.com/macros/s/AKfycbzejnUlHlKjn8K4TpIT6xI63j8epHh1l_stGXLHT2wzH0_kOFdpQ4tecR5XpHftC9A/exec',
   PAYPAL_ME_USERNAME: 'Abhay2309',
   PAYPAL_DISPLAY_NAME: 'Abhay Sathyanarayana Rao',
   HELP_NAME: 'Abhay',
