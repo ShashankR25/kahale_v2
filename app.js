@@ -1,5 +1,5 @@
 /*
- * Shared helpers for the KĀHALE pages: server calls, safe browser storage,
+ * Shared helpers for the KAHALE pages: server calls, safe browser storage,
  * device detection and the QR ticket picture (with Save / Share).
  * Works in every current browser and in the in-app browsers of Instagram,
  * WhatsApp, Facebook, Telegram, etc. (no build step, plain ES5-style code).
@@ -161,7 +161,7 @@
     g.fillStyle = '#f8e5ad'; g.font = 'bold 42px Arial, Helvetica, sans-serif';
     g.fillText('KARNATAKA RAJYOTSAVA 2026', W / 2, 140);
     g.fillStyle = '#fff7e4'; g.font = '26px Arial, Helvetica, sans-serif';
-    g.fillText('KĀHALE · ENTRY TICKET', W / 2, 186);
+    g.fillText('KAHALE · ENTRY TICKET', W / 2, 186);
     // card
     g.fillStyle = '#fffdf8'; roundRect(g, 30, 220, W - 60, H - 250, 22); g.fill();
     g.fillStyle = '#861d20'; g.fillRect(30, 220, W - 60, 6);
@@ -278,7 +278,7 @@
       var file = null;
       try { file = new File([blob], filename(ticketId), { type: 'image/png' }); } catch (e) { file = null; }
       if (file && navigator.canShare && navigator.canShare({ files: [file] })) {
-        navigator.share({ files: [file], title: 'KĀHALE ticket ' + ticketId }).then(function () {
+        navigator.share({ files: [file], title: 'KAHALE ticket ' + ticketId }).then(function () {
           note.textContent = 'Saved / shared. Keep it for the entrance.';
           note.className = 'small-note save-note highlight';
         }, function (error) {
