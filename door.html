@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>KĀHALE Door Scanner</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#11100e">
+<link rel="icon" href="img/logo.jpg">
+<style>
+:root{--gold:#d6ad54;--gold-light:#f8e5ad;--red:#861d20;--text:#27231e;--muted:#706960;--border:#e8e0d3;--cream:#fffdf8;--ok:#1b7a34;--bad:#b71c1c;--warn:#c46a00;--neutral:#5d4037}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0;background:#11100e;color:var(--text);font-family:Arial,Helvetica,sans-serif;line-height:1.45;-webkit-tap-highlight-color:transparent}
+.page{max-width:560px;margin:0 auto;padding:12px 10px calc(16px + env(safe-area-inset-bottom))}
+.hero{display:flex;align-items:center;gap:12px;padding:12px 14px;color:var(--gold-light);background:#000;border:1px solid #8e692e;border-bottom:3px solid var(--gold);border-radius:12px 12px 0 0}
+.hero img{width:44px;height:44px;border-radius:50%;object-fit:cover}
+.hero b{display:block;font-size:17px}.hero small{color:#f5dca4;font-size:12px;letter-spacing:1px}
+.card{background:var(--cream);padding:16px 14px;border:1px solid var(--border);border-top:0;border-radius:0 0 12px 12px}
+h2{color:var(--red);font-size:18px;margin:0 0 12px}
+label{display:block;font-weight:bold;font-size:14px;margin:0 0 6px}
+input{width:100%;min-height:48px;padding:10px 12px;border:1px solid #d6cfc3;border-radius:8px;font-size:16px;background:#fff;color:var(--text)}
+input:focus{outline:2px solid #d6ad5480;border-color:#b68b37}
+.field{margin-bottom:12px}
+button{font-family:inherit;border:0;border-radius:9px;padding:12px 14px;min-height:48px;font-size:16px;font-weight:bold;cursor:pointer;touch-action:manipulation}
+button:disabled{opacity:.55;cursor:wait}
+.primary{background:var(--red);color:#fff;width:100%}
+.ghost{background:#efe7d8;color:var(--text)}
+.small{min-height:36px;padding:6px 11px;font-size:13px}
+.msg{margin-top:10px;padding:10px 12px;border-radius:8px;font-size:14px}
+.msg:empty{display:none}
+.msg.error{background:#ffebee;color:var(--bad)}
+.msg.info{background:#fff6df;color:#6b4e00}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px;font-size:13px;color:var(--muted)}
+.topbar .actions{display:flex;gap:6px}
+.teams{display:grid;gap:10px}
+.team{display:flex;align-items:center;gap:14px;width:100%;text-align:left;background:#fff;border:2px solid var(--border);color:var(--text);padding:14px}
+.team .icon{font-size:30px}.team b{display:block;font-size:18px;color:var(--red)}.team small{display:block;font-weight:normal;color:var(--muted);font-size:13px}
+.badge{display:inline-block;color:#fff;border-radius:999px;padding:3px 12px;font-size:13px;font-weight:bold;letter-spacing:1px}
+.badge.security{background:#1f4e8c}.badge.food{background:#a14a00}.badge.snacks{background:#6a2c91}
+.cam-wrap{position:relative;border-radius:12px;overflow:hidden;background:#000;aspect-ratio:1/1;width:100%}
+#reader{width:100%;height:100%}
+#reader video{object-fit:cover!important;width:100%!important;height:100%!important}
+.cam-hint{position:absolute;left:0;right:0;bottom:0;padding:9px;text-align:center;color:#fff;font-size:14px;background:linear-gradient(transparent,rgba(0,0,0,.75));pointer-events:none}
+.cam-off{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:18px;color:#f8e5ad;text-align:center;font-size:14px}
+.cam-off button{background:var(--gold);color:#14120f}
+.row{display:flex;gap:8px;margin-top:10px}.row>*{flex:1}
+#manualBox{margin-top:10px}
+#manualBox form{display:flex;gap:8px}#manualBox input{flex:3}#manualBox button{flex:1}
+/* result */
+.result{margin-top:0}
+.status{border-radius:12px;padding:16px 14px;text-align:center;color:#fff}
+.status strong{display:block;font-size:24px;letter-spacing:.5px;line-height:1.2}
+.status .big{display:block;font-size:44px;font-weight:bold;line-height:1.1;margin:6px 0 2px}
+.status span{display:block;font-size:15px;margin-top:4px}
+.status.valid{background:var(--ok)}.status.used{background:var(--bad)}.status.notpaid{background:var(--warn)}.status.notfound,.status.noteligible{background:var(--neutral)}
+.status.done{background:var(--ok)}
+.who{font-size:17px;font-weight:bold;margin:12px 0 2px;text-align:center}
+.src{font-size:12px;color:var(--muted);text-align:center}
+.allow{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+.allow button{background:var(--ok);color:#fff;font-size:18px;min-height:58px}
+.allow button.all{grid-column:1/-1;font-size:20px}
+.next{margin-top:10px;width:100%}
+table{width:100%;border-collapse:collapse;font-size:14px;margin-top:12px}
+td{padding:6px 4px;border-bottom:1px solid var(--border);vertical-align:top;overflow-wrap:anywhere}
+td:first-child{color:var(--muted);width:36%;white-space:nowrap}
+.log{white-space:pre-line}
+.choices{display:grid;gap:8px;margin-top:10px}
+.choices button{background:#fff;border:2px solid var(--border);color:var(--text);text-align:left;font-weight:normal}
+.choices b{color:var(--red)}
+.spinner{display:inline-block;width:20px;height:20px;border-radius:50%;border:3px solid rgba(255,255,255,.35);border-top-color:#fff;animation:spin .9s linear infinite;vertical-align:middle;margin-right:8px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.footer{color:#9c8f7c;font-size:11px;text-align:center;margin-top:12px}
+</style>
+</head>
+<body>
+<div class="page">
+  <header class="hero">
+    <img src="img/logo.jpg" alt="" onerror="this.style.display='none'">
+    <div><b>KĀHALE Door Scanner</b><small>KANNADA RAJYOTSAVA 2026 · PAYPAL + BANK TRANSFER</small></div>
+  </header>
+  <main class="card">
+
+    <section id="loginView">
+      <h2>Team login</h2>
+      <form id="loginForm">
+        <div class="field"><label for="username">Username</label><input id="username" autocomplete="username" autocapitalize="off" spellcheck="false" required></div>
+        <div class="field"><label for="password">Password</label><input id="password" type="password" autocomplete="current-password" required></div>
+        <button class="primary" id="loginButton" type="submit">Log in</button>
+      </form>
+      <div id="loginMsg" class="msg error" role="alert"></div>
+    </section>
+
+    <section id="teamView" hidden>
+      <div class="topbar"><span>Logged in as <b class="userName"></b></span><button class="ghost small logout" type="button">Log out</button></div>
+      <h2>Choose your counter</h2>
+      <div class="teams">
+        <button class="team" type="button" data-team="security"><span class="icon">🛡</span><span><b>Security · Entry</b><small>All tickets · counts people entering</small></span></button>
+        <button class="team" type="button" data-team="food"><span class="icon">🍛</span><span><b>Food</b><small>Entry Pass with Dinner · Deal of the Day</small></span></button>
+        <button class="team" type="button" data-team="snacks"><span class="icon">🥨</span><span><b>Snacks</b><small>Entry Pass with Snacks · Deal of the Day</small></span></button>
+      </div>
+    </section>
+
+    <section id="scanView" hidden>
+      <div class="topbar">
+        <span><span class="badge" id="teamBadge"></span> <b class="userName"></b></span>
+        <span class="actions"><button class="ghost small" id="changeTeam" type="button">Counter</button><button class="ghost small logout" type="button">Log out</button></span>
+      </div>
+
+      <div id="cameraPane">
+        <div class="cam-wrap">
+          <div id="reader"></div>
+          <div class="cam-hint" id="camHint">Hold the QR code inside the frame</div>
+          <div class="cam-off" id="camOff" hidden>
+            <span id="camOffText">Camera is off</span>
+            <button type="button" id="camStart">Start camera</button>
+          </div>
+        </div>
+        <div class="row">
+          <button class="ghost" type="button" id="manualToggle">⌨ Type ID / email</button>
+          <button class="ghost" type="button" id="photoButton">📷 Photo</button>
+        </div>
+        <input id="photoInput" type="file" accept="image/*" capture="environment" hidden>
+        <div id="manualBox" hidden>
+          <form id="manualForm"><input id="manualInput" placeholder="KAH-… or email" autocomplete="off" autocapitalize="characters" spellcheck="false"><button class="primary" type="submit">Check</button></form>
+        </div>
+      </div>
+
+      <div id="resultPane" class="result" hidden></div>
+      <div id="scanMsg" class="msg" role="status"></div>
+    </section>
+  </main>
+  <p class="footer">One QR code covers the whole group · each counter counts separately</p>
+</div>
+<div id="fileReader" hidden></div>
+
+<script src="door-config.js"></script>
+<script src="vendor/html5-qrcode.min.js"></script>
+<script>
+(function () {
+  'use strict';
+  var CFG = window.DOOR_CONFIG || {};
+  var $ = function (id) { return document.getElementById(id); };
+  var UA = navigator.userAgent || '';
+  var IN_APP = /Instagram|FBAN|FBAV|FB_IAB|WhatsApp|Line\/|Snapchat|TikTok|; wv\)/i.test(UA);
+
+  var TEAMS = {
+    security: { label: 'Security', one: 'person', many: 'people', verb: 'Allow', done: 'allowed in', usedTitle: 'QR CODE ALREADY USED', valid: 'can enter' },
+    food: { label: 'Food', one: 'meal', many: 'meals', verb: 'Serve', done: 'served', usedTitle: 'ALREADY SERVED', valid: 'meals to serve' },
+    snacks: { label: 'Snacks', one: 'snack', many: 'snacks', verb: 'Serve', done: 'served', usedTitle: 'ALREADY SERVED', valid: 'snacks to serve' }
+  };
+
+  /* ---------- storage (never throws) ---------- */
+  var store = {
+    get: function (k) { try { var v = localStorage.getItem(k); return v ? JSON.parse(v) : null; } catch (e) { return null; } },
+    set: function (k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* ignore */ } },
+    del: function (k) { try { localStorage.removeItem(k); } catch (e) { /* ignore */ } }
+  };
+  var session = store.get('door_session');
+  if (session && !(session.expires > Date.now())) session = null;
+  var team = store.get('door_team');
+  if (!TEAMS[team]) team = null;
+
+  /* ---------- server ---------- */
+  var TEMP = /BUSY|timed? ?out|network|server error|unavailable|failed to fetch|load failed|connection|too many|simultaneous/i;
+  function once(fn, args) {
+    return new Promise(function (resolve, reject) {
+      // https (real use) or http on this computer / home network (local testing only).
+      if (!CFG.DOOR_API_URL || !(/^https:\/\//.test(CFG.DOOR_API_URL) || (location.protocol === 'http:' && /^http:\/\//.test(CFG.DOOR_API_URL)))) {
+        reject(new Error('DOOR_API_URL is not set in door-config.js.')); return;
+      }
+      var done = false;
+      var ctrl = typeof AbortController !== 'undefined' ? new AbortController() : null;
+      var timer = setTimeout(function () { if (done) return; done = true; try { ctrl && ctrl.abort(); } catch (e) {} reject(new Error('network: timed out')); }, 30000);
+      var opts = { method: 'POST', body: JSON.stringify({ fn: fn, args: args }), redirect: 'follow', credentials: 'omit' };
+      if (ctrl) opts.signal = ctrl.signal;
+      fetch(CFG.DOOR_API_URL, opts).then(function (r) {
+        if (!r.ok) throw new Error('server error ' + r.status);
+        return r.text();
+      }).then(function (t) {
+        var d;
+        try { d = JSON.parse(t); } catch (e) { throw new Error('server error: unexpected answer'); }
+        if (done) return; done = true; clearTimeout(timer);
+        if (d && d.ok) resolve(d.result); else reject(new Error(d && d.error ? d.error : 'server error'));
+      }).catch(function (e) {
+        if (done) return; done = true; clearTimeout(timer);
+        var m = e && e.message ? e.message : String(e);
+        reject(new Error(/server error|network/i.test(m) ? m : 'network: ' + m));
+      });
+    });
+  }
+  function call(fn) {
+    var args = [].slice.call(arguments, 1);
+    var attempt = 0;
+    return new Promise(function (resolve, reject) {
+      (function run() {
+        once(fn, args).then(resolve, function (e) {
+          var m = e.message || '';
+          if (m.indexOf('SESSION_EXPIRED') !== -1) { logout('Your login has expired. Please log in again.'); reject(e); return; }
+          if (TEMP.test(m) && attempt < 4) { setTimeout(run, 500 * Math.pow(2, attempt++) + Math.random() * 300); return; }
+          reject(new Error(TEMP.test(m) ? 'No connection to the server. Check the internet and try again.' : m));
+        });
+      })();
+    });
+  }
+  function rid() {
+    try { if (crypto.randomUUID) return crypto.randomUUID(); } catch (e) { /* ignore */ }
+    return Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 12);
+  }
+
+  /* ---------- feedback ---------- */
+  var audio = null;
+  function beep(ok) {
+    try { if (navigator.vibrate) navigator.vibrate(ok ? 60 : [180, 90, 180]); } catch (e) { /* ignore */ }
+    try {
+      audio = audio || new (window.AudioContext || window.webkitAudioContext)();
+      var o = audio.createOscillator(), g = audio.createGain();
+      o.frequency.value = ok ? 880 : 220; g.gain.value = 0.08;
+      o.connect(g); g.connect(audio.destination); o.start(); o.stop(audio.currentTime + (ok ? 0.12 : 0.35));
+    } catch (e) { /* ignore */ }
+  }
+
+  /* ---------- views ---------- */
+  function setUser(name) { [].forEach.call(document.querySelectorAll('.userName'), function (n) { n.textContent = name || ''; }); }
+  function show(view) {
+    $('loginView').hidden = view !== 'login';
+    $('teamView').hidden = view !== 'team';
+    $('scanView').hidden = view !== 'scan';
+    if (view === 'scan') startScanning(); else stopCamera();
+  }
+  function msg(id, text, type) { var m = $(id); m.textContent = text || ''; m.className = 'msg' + (type ? ' ' + type : ''); }
+  function logout(text) {
+    session = null; store.del('door_session');
+    show('login');
+    if (text) msg('loginMsg', text, 'error');
+  }
+
+  $('loginForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var b = $('loginButton'); b.disabled = true; b.textContent = 'Logging in…'; msg('loginMsg', '');
+    call('login', $('username').value, $('password').value).then(function (s) {
+      session = s; store.set('door_session', s); setUser(s.username); $('password').value = '';
+      show(team ? 'scan' : 'team');
+    }, function (err) { msg('loginMsg', err.message, 'error'); }).then(function () { b.disabled = false; b.textContent = 'Log in'; });
+  });
+  [].forEach.call(document.querySelectorAll('.logout'), function (b) { b.addEventListener('click', function () { logout(''); }); });
+  [].forEach.call(document.querySelectorAll('.team'), function (b) {
+    b.addEventListener('click', function () {
+      team = b.getAttribute('data-team'); store.set('door_team', team); applyTeam(); show('scan');
+      try { audio = audio || new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { /* unlock sound */ }
+    });
+  });
+  $('changeTeam').addEventListener('click', function () { closeResult(false); show('team'); });
+  function applyTeam() { var t = $('teamBadge'); t.textContent = team ? TEAMS[team].label.toUpperCase() : ''; t.className = 'badge ' + (team || ''); }
+
+  /* ---------- camera ---------- */
+  var qr = null, camState = 'off', busy = false, lastCode = '', lastAt = 0;
+  function camOff(text, showButton) {
+    $('camOff').hidden = false; $('camOffText').textContent = text; $('camStart').hidden = !showButton; $('camHint').hidden = true;
+  }
+  function startScanning() {
+    msg('scanMsg', '');
+    if (!$('resultPane').hidden) return;
+    $('cameraPane').hidden = false;
+    if (typeof Html5Qrcode === 'undefined') { camOff('Scanner library missing - use Type ID or Photo.', false); return; }
+    if (camState === 'paused') { try { qr.resume(); camState = 'on'; $('camHint').hidden = false; return; } catch (e) { camState = 'on'; } }
+    if (camState === 'on' || camState === 'starting') return;
+    camState = 'starting';
+    $('camOff').hidden = true; $('camHint').hidden = false; $('camHint').textContent = 'Starting camera…';
+    try {
+      qr = qr || new Html5Qrcode('reader', {
+        verbose: false,
+        formatsToSupport: [Html5QrcodeSupportedFormats.QR_CODE],
+        experimentalFeatures: { useBarCodeDetectorIfSupported: true }
+      });
+    } catch (e) { camState = 'off'; camOff('Camera not available - use Type ID or Photo.', false); return; }
+    qr.start({ facingMode: 'environment' }, {
+      fps: 12,
+      qrbox: function (w, h) { var s = Math.floor(Math.min(w, h) * 0.72); return { width: s, height: s }; },
+      aspectRatio: 1
+    }, onDecode, function () { /* no QR in this frame */ }).then(function () {
+      camState = 'on'; $('camHint').textContent = 'Hold the QR code inside the frame';
+      if (!$('resultPane').hidden || $('scanView').hidden) pauseCamera();
+    }, function (err) {
+      camState = 'off';
+      var m = String(err && (err.name || err.message || err));
+      if (/NotAllowed|Permission|denied/i.test(m)) {
+        camOff(IN_APP ? 'This app blocks the camera. Open this page in Chrome or Safari - or use Type ID / Photo.'
+          : 'Camera access was blocked. Allow the camera for this site in the browser settings, then tap Start camera.', true);
+      } else if (/NotFound|no camera|Requested device not found/i.test(m)) {
+        camOff('No camera found - use Type ID or Photo.', false);
+      } else if (/secure|https/i.test(m) || !window.isSecureContext) {
+        camOff('The live camera needs https:// (or localhost). Use Type ID or Photo here.', false);
+      } else {
+        camOff('Camera could not start (' + m.slice(0, 80) + ').', true);
+      }
+    });
+  }
+  function pauseCamera() { if (qr && camState === 'on') { try { qr.pause(true); camState = 'paused'; } catch (e) { /* ignore */ } } }
+  function stopCamera() {
+    if (qr && (camState === 'on' || camState === 'paused')) {
+      var q = qr; camState = 'stopping';
+      q.stop().then(function () { camState = 'off'; }, function () { camState = 'off'; });
+    }
+  }
+  $('camStart').addEventListener('click', function () { camState = 'off'; startScanning(); });
+  document.addEventListener('visibilitychange', function () {
+    if (document.hidden) stopCamera();
+    else if (!$('scanView').hidden && $('resultPane').hidden) setTimeout(startScanning, 300);
+  });
+
+  function onDecode(text) {
+    var now = Date.now();
+    if (busy || (text === lastCode && now - lastAt < 2500)) return;
+    lastCode = text; lastAt = now;
+    lookup(text);
+  }
+
+  /* ---------- photo + manual fallbacks ---------- */
+  $('photoButton').addEventListener('click', function () { $('photoInput').click(); });
+  $('photoInput').addEventListener('change', function () {
+    var f = this.files && this.files[0]; this.value = '';
+    if (!f) return;
+    msg('scanMsg', 'Reading QR code…', 'info');
+    var reader = new Html5Qrcode('fileReader', { verbose: false });
+    reader.scanFile(f, false).then(function (t) { msg('scanMsg', ''); lookup(t); }, function () {
+      msg('scanMsg', 'No QR code found in that photo. Try again closer, or type the ticket ID.', 'error');
+    });
+  });
+  $('manualToggle').addEventListener('click', function () { $('manualBox').hidden = !$('manualBox').hidden; if (!$('manualBox').hidden) $('manualInput').focus(); });
+  $('manualForm').addEventListener('submit', function (e) { e.preventDefault(); var v = $('manualInput').value.trim(); if (v) lookup(v); });
+
+  /* ---------- lookup + result ---------- */
+  function el(tag, cls, text) { var n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; }
+
+  function lookup(code) {
+    if (busy) return;
+    busy = true;
+    pauseCamera();
+    var pane = $('resultPane');
+    pane.innerHTML = '';
+    var st = el('div', 'status notfound');
+    st.innerHTML = '<span class="spinner"></span>Checking ticket…';
+    pane.appendChild(st);
+    pane.hidden = false;
+    $('cameraPane').hidden = true;
+    msg('scanMsg', '');
+    call('lookup', session && session.token, code, team).then(function (t) {
+      busy = false;
+      render(t);
+    }, function (err) {
+      busy = false;
+      if (!session) return;
+      renderError(err.message);
+    });
+  }
+
+  function render(t, notice) {
+    var cfg = TEAMS[team];
+    var pane = $('resultPane');
+    pane.innerHTML = '';
+    if (notice) {
+      // Right after Allow/Serve: only the green confirmation (no red "used" box),
+      // then back to the camera by itself.
+      var d = el('div', 'status done');
+      d.appendChild(el('strong', null, notice));
+      d.appendChild(el('span', null, t.remaining + ' left on this ticket for ' + cfg.label));
+      pane.appendChild(d);
+      pane.appendChild(el('div', 'who', t.name || ''));
+      pane.appendChild(el('div', 'src', t.ticketId + ' · ' + t.source));
+      pane.appendChild(nextButton('Scan next'));
+      return;
+    }
+    if (t.choices) {
+      pane.appendChild(el('div', 'who', 'Several tickets for this email - choose one:'));
+      var box = el('div', 'choices');
+      t.choices.forEach(function (c) {
+        var b = el('button'); b.type = 'button';
+        b.appendChild(el('b', null, c.ticketId)); b.appendChild(document.createTextNode(' · ' + c.name + ' · ' + c.source + ' · ' + c.status));
+        b.addEventListener('click', function () { lookup(c.ticketId); });
+        box.appendChild(b);
+      });
+      pane.appendChild(box);
+      pane.appendChild(nextButton());
+      return;
+    }
+    if (!t.found) {
+      beep(false);
+      var nf = el('div', 'status notfound');
+      nf.appendChild(el('strong', null, t.notTicket ? '✖ NOT A KĀHALE TICKET' : '✖ TICKET NOT FOUND'));
+      nf.appendChild(el('span', null, t.ticketId || ''));
+      pane.appendChild(nf);
+      pane.appendChild(nextButton());
+      return;
+    }
+    var map = {
+      VALID: ['valid', '✔ VALID', t.remaining + ' of ' + t.totalAllowed + ' ' + cfg.valid],
+      USED: ['used', '✖ ' + cfg.usedTitle, 'All ' + t.totalAllowed + ' already ' + cfg.done],
+      NOT_PAID: ['notpaid', '⚠ NOT PAID', 'Payment status: ' + t.paymentStatus + ' - send to an organiser'],
+      NOT_ELIGIBLE: ['noteligible', team === 'food' ? '✖ NO FOOD ON THIS TICKET' : team === 'snacks' ? '✖ NO SNACKS ON THIS TICKET' : '✖ NOT VALID',
+        team === 'food' ? 'Only "Entry Pass with Dinner" and "Deal of the Day" include food' : 'Only "Entry Pass with Snacks" and "Deal of the Day" include snacks']
+    };
+    var s = map[t.state];
+    if (!notice) beep(t.state === 'VALID');
+    var box2 = el('div', 'status ' + s[0]);
+    box2.appendChild(el('strong', null, s[1]));
+    if (t.state === 'VALID') box2.appendChild(el('span', 'big', String(t.remaining)));
+    box2.appendChild(el('span', null, s[2]));
+    pane.appendChild(box2);
+    pane.appendChild(el('div', 'who', t.name || ''));
+    pane.appendChild(el('div', 'src', t.ticketId + ' · ' + t.source + (t.packages.length ? ' · ' + t.packages.map(function (p) { return p.name + ' ×' + p.quantity; }).join(', ') : '')));
+
+    if (t.state === 'VALID') {
+      // 1 left: one big button. 2-6: 1..r-1 + "all r". More: 1..5 + "all r".
+      var grid = el('div', 'allow');
+      var r = t.remaining;
+      var small = r === 1 ? 0 : Math.min(r - 1, 5);
+      for (var i = 1; i <= small; i++) grid.appendChild(allowButton(t, i, cfg.verb + ' ' + i));
+      var all = allowButton(t, r, r === 1 ? cfg.verb + ' 1 ' + cfg.one : cfg.verb + ' all ' + r);
+      all.className = 'all';
+      grid.appendChild(all);
+      pane.appendChild(grid);
+    }
+    if (team === 'security' && t.email !== undefined) {
+      var tbl = el('table');
+      [['Email', t.email], ['Student?', t.student], ['University', t.university || '—'],
+        ['All packages', (t.allPackages || []).map(function (p) { return p.name + ' × ' + p.quantity; }).join('\n') || '—'],
+        ['Total paid', t.total ? '€' + t.total : '—'], ['Last check-in', t.lastCheckin || '—'], ['Check-in log', t.checkinLog || '—']
+      ].forEach(function (rw) {
+        var tr = el('tr'); tr.appendChild(el('td', null, rw[0])); tr.appendChild(el('td', 'log', rw[1])); tbl.appendChild(tr);
+      });
+      pane.appendChild(tbl);
+    }
+    pane.appendChild(nextButton(t.state === 'VALID' ? 'Cancel · scan next' : 'Scan next'));
+  }
+
+  function allowButton(t, n, label) {
+    var b = el('button', null, label); b.type = 'button';
+    b.setAttribute('data-count', String(n));
+    b.addEventListener('click', function () { admit(t, n, b); });
+    return b;
+  }
+
+  function admit(t, n, button) {
+    var cfg = TEAMS[team];
+    var buttons = $('resultPane').querySelectorAll('button');
+    [].forEach.call(buttons, function (b) { b.disabled = true; });
+    button.innerHTML = '<span class="spinner"></span>Saving…';
+    var req = rid();
+    call('admit', session && session.token, t.ticketId, n, team, req).then(function (u) {
+      beep(true);
+      render(u, '✔ ' + u.justAdmitted + ' ' + (u.justAdmitted === 1 ? cfg.one : cfg.many) + ' ' + cfg.done);
+      setTimeout(function () { if (!$('resultPane').hidden && $('resultPane').querySelector('.status.done')) closeResult(true); }, CFG.BACK_TO_CAMERA_MS || 1400);
+    }, function (err) {
+      if (!session) return;
+      beep(false);
+      [].forEach.call(buttons, function (b) { b.disabled = false; });
+      button.textContent = cfg.verb + ' ' + n;
+      msg('scanMsg', err.message, 'error');
+    });
+  }
+
+  function renderError(text) {
+    var pane = $('resultPane');
+    pane.innerHTML = '';
+    var e = el('div', 'status notfound');
+    e.appendChild(el('strong', null, '⚠ COULD NOT CHECK'));
+    e.appendChild(el('span', null, text));
+    pane.appendChild(e);
+    pane.appendChild(nextButton('Try again · scan next'));
+    beep(false);
+  }
+
+  function nextButton(label) {
+    var b = el('button', 'primary next', label || 'Scan next'); b.type = 'button';
+    b.addEventListener('click', function () { closeResult(true); });
+    return b;
+  }
+
+  function closeResult(resume) {
+    $('resultPane').hidden = true;
+    $('resultPane').innerHTML = '';
+    $('cameraPane').hidden = false;
+    $('manualInput').value = '';
+    msg('scanMsg', '');
+    lastCode = '';
+    if (resume && !$('scanView').hidden) startScanning();
+  }
+
+  /* ---------- start ---------- */
+  applyTeam();
+  if (session) { setUser(session.username); show(team ? 'scan' : 'team'); } else show('login');
+  once('ping', []).catch(function () { /* warm-up only */ });
+})();
+</script>
+</body>
+</html>
